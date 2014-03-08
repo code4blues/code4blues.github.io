@@ -4,28 +4,13 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>一些可以使用的第三方库 for iOS | Code4Blues</title>
+    <title>01_记一次配置Karma跟RequireJS的过程 | Code4Blues</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="kg8gk">
     
-    <meta name="description" content="正在使用以及学习使用它们
-不断更新中
-
-第三方库
-
-ReactiveCocoa
-
-
-测试框架
-
-Kiwi
-
-
-工具
-
-CocoaPods
-Alcatraz">
+    <meta name="description" content="昨个儿乱翻书的时候，在书中看到了使用Karma进行测试的教程，于是照着步骤新建了一个工程，然后改造了下。在满怀希望地看着测试在三大浏览器下运行，希望它们都能通过的时候，出问题了。spec文件中的依赖关系没法解决，第三方库文件没有办法加载，好吧，其实其他的spec文件也都加载不了，这是怎么回事呢？
+目">
     
     
     
@@ -81,15 +66,15 @@ Alcatraz">
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/03/04/00_一些可以使用的第三方库-for-ios/" title="一些可以使用的第三方库 for iOS" itemprop="url">一些可以使用的第三方库 for iOS</a>
+      <a href="/2014/03/08/01_记一次使用karma跟requirejs进行测试的经历/" title="01_记一次配置Karma跟RequireJS的过程" itemprop="url">01_记一次配置Karma跟RequireJS的过程</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://code4blues.github.io" title="kg8gk">kg8gk</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-03-04T14:36:09.000Z" itemprop="datePublished">3月 4 2014</time>
-    更新日期:<time datetime="2014-03-04T23:39:07.000Z" itemprop="dateModified">3月 5 2014</time>
+    <time datetime="2014-03-08T00:19:14.000Z" itemprop="datePublished">3月 8 2014</time>
+    更新日期:<time datetime="2014-03-08T06:34:50.000Z" itemprop="dateModified">3月 8 2014</time>
     
   </p>
 </header>
@@ -98,36 +83,129 @@ Alcatraz">
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#-"><span class="toc-number">1.</span> <span class="toc-text">正在使用以及学习使用它们</span></a></li></ol>
+		
 		</div>
 		
-		<h4 id="-">正在使用以及学习使用它们</h4>
-<p>不断更新中</p>
+		<p>昨个儿乱翻书的时候，在书中看到了使用Karma进行测试的教程，于是照着步骤新建了一个工程，然后改造了下。在满怀希望地看着测试在三大浏览器下运行，希望它们都能通过的时候，出问题了。spec文件中的依赖关系没法解决，第三方库文件没有办法加载，好吧，其实其他的spec文件也都加载不了，这是怎么回事呢？</p>
+<p>目录结构如下（请忽略糟糕的结构）:</p>
 <ul>
-<li><p>第三方库</p>
-<ul>
-<li><a href="https://github.com/ReactiveCocoa/ReactiveCocoa" target="_blank">ReactiveCocoa</a></li>
+<li>app/<ul>
+<li>backend/</li>
+<li>frontend/<ul>
+<li>controllers/</li>
+<li>directives/</li>
+<li>services/</li>
 </ul>
 </li>
-<li><p>测试框架</p>
-<ul>
-<li><a href="https://github.com/allending/Kiwi" target="_blank">Kiwi</a></li>
+<li>test/<ul>
+<li>controllers/</li>
+<li>directives/</li>
+<li>services/</li>
+<li>karma.conf.js</li>
+<li>main.spec.js</li>
+<li>test-main-cfg.js</li>
 </ul>
 </li>
-<li><p>工具</p>
-<ul>
-<li><a href="http://http://cocoapods.org" target="_blank">CocoaPods</a></li>
-<li><a href="http://alcatraz.io" target="_blank">Alcatraz</a></li>
+<li>vendor/ <ul>
+<li>underscore/underscore.js</li>
+<li>angular/angular.min.js</li>
+<li>其他文件</li>
 </ul>
 </li>
 </ul>
+</li>
+</ul>
+<p>Karma配置文件<em>karma.conf.js</em>的内容:</p>
+<pre><code>module.exports = function(config) {
+    config.set({
+    basePath: &#39;&#39;,
+    frameworks: [&#39;jasmine&#39;, &#39;requirejs&#39;],
+    files: [
+        {pattern: &#39;test/**/*.spec.js&#39;, included: false},
+        {pattern: &#39;vendor/angular/angular.min.js&#39;, included: false},
+        {pattern: &#39;vendor/angular/angular-route.min.js&#39;, included: false},
+        {pattern: &#39;vendor/angular/angular-mocks.js&#39;, included: false},
+        {pattern: &#39;backend/public/**/*.js&#39;, included: false},
+        {pattern: &#39;test/main.spec.js&#39;, included: false},
+        &#39;test/test-main-cfg.js&#39;
+    ],
+    exclude: [
+        &#39;**/*.swp&#39;
+    ],
+    port: 9876,
+    colors: true,
+    logLevel: config.LOG_INFO,
+    autoWatch: true,
+    browsers: [&#39;Chrome&#39;, &#39;Firefox&#39;, &#39;Safari&#39;],
+    captureTimeout: 60000,
+    singleRun: false
+    });
+};
+</code></pre><p>接下来是RequireJS配置文件以及Karma启动相关的配置，在<em>test-main-cfg.js</em>中：</p>
+<pre><code>require.config({
+  baseUrl: &#39;/base/&#39;,
+  paths: {
+    &#39;jquery&#39;: &quot;vendor/jquery/dist/jquery.min&quot;,
+    &#39;angular&#39;: &#39;vendor/angular/angular.min&#39;,
+    &#39;angularRoute&#39;: &#39;vendor/angular/        anguar-route.min&#39;,
+    &#39;angularMocks&#39;: &#39;vendor/angular/angular-mocks&#39;,
+    &#39;underscore&#39;: &#39;vendor/underscore/underscore&#39;
+  },
+  shim: {
+    &#39;underscore&#39;: {
+      exports: &#39;_&#39;
+    },
+    &#39;jquery&#39;: {
+      exports: &#39;jquery&#39;
+    },
+    &#39;angular&#39;: {
+      deps: [&#39;jquery&#39;],
+      exports: &#39;angular&#39;
+    },
+    &#39;angularRoute&#39;: {
+      deps: [&#39;angular&#39;],
+      exports: &#39;angularRoute&#39;
+    },
+    &#39;angularMocks&#39;: {
+      deps:[&#39;angular&#39;],
+      exports: &#39;angularMocks&#39;
+    }
+  },
+  deps: tests,
+  callback: window.__karma__.start
+});
+</code></pre><p>定义了一个测试用的spec文件， <em>main.spec.js</em>：</p>
+<pre><code>define([&#39;underscore&#39;, &#39;jquery&#39;, &#39;angular&#39;, &#39;angularRoute&#39;, &#39;angularMocks&#39;], function(_) {
+  describe(&#39;UnitTest: ParamsSettings&#39;, function(_) {
+    it(&#39;is defined&#39;, function() {
+      expect(_.size([1,2,3])).toEqual(3);
+    })
+  })
+});
+</code></pre><p>启动Karma后报错，没有办法找到underscore,jquery等等这些文件。在浏览器里头看，这些都是404请求，根本定位不到它们，在浏览器里头直接敲地址，也是404，怎么会这样呢？</p>
+<p>后来写了另外一个测试文件another.spec.js，放在test目录下，跟main.spec.js同级。然后通过改变main.spec.js文件的url，把文件名换成another.spec.js，还是找不到。</p>
+<p>Karma的服务器没有提供对这些文件的访问，是因为需要在<code>file</code>属性中设置它们的位置：</p>
+<pre><code>files: [
+    {pattern: &#39;vendor/**/*.js&#39;, included: false},
+    {pattern: &#39;vendor/**/*.map&#39;, included: false},
+    {pattern: &#39;backend/public/**/*.js&#39;, included: false},
+    {pattern: &#39;test/*.spec.js&#39;, included: false},
+    {pattern: &#39;test/**/*.spec.js&#39;, included: false},
+    {pattern: &#39;test/main.spec.js&#39;, included: false},
+    &#39;test/test-main-cfg.js&#39;
+  ]
+</code></pre><p>正如<a href="http://karma-runner.github.io/0.10/config/files.html" target="_blank">官方文档</a>里头写着的</p>
+<blockquote>
+<p>The <strong>files</strong> array determines which files are included in the browser and which files are watched and served by Karma.</p>
+</blockquote>
+<p>所以说，没事要多翻翻文档，就不会浪费这一个晚上多两个小时白天的时间了，sigh。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/iOS/">iOS</a>
+  <span></span> <a href="/tags/JavaScript/">JavaScript</a><a href="/tags/Karma/">Karma</a><a href="/tags/RequireJS/">RequireJS</a>
   </div>
 
 
@@ -135,7 +213,7 @@ Alcatraz">
 
 <div class="article-share" id="share">
 
-  <div data-url="http://code4blues.github.io/2014/03/04/00_一些可以使用的第三方库-for-ios/" data-title="一些可以使用的第三方库 for iOS | Code4Blues" data-tsina="null" class="share clearfix">
+  <div data-url="http://code4blues.github.io/2014/03/08/01_记一次使用karma跟requirejs进行测试的经历/" data-title="01_记一次配置Karma跟RequireJS的过程 | Code4Blues" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -144,14 +222,14 @@ Alcatraz">
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2014/03/08/01_记一次使用karma跟requirejs进行测试的经历/" title="01_记一次配置Karma跟RequireJS的过程">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  01_记一次配置Karma跟RequireJS的过程</span>
+
+<div class="next">
+<a href="/2014/03/04/00_一些可以使用的第三方库-for-ios/"  title="一些可以使用的第三方库 for iOS">
+ <strong>NEXT:</strong><br/> 
+ <span>一些可以使用的第三方库 for iOS
+</span>
 </a>
 </div>
-
 
 </nav>
 
@@ -161,7 +239,7 @@ Alcatraz">
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#-"><span class="toc-number">1.</span> <span class="toc-text">正在使用以及学习使用它们</span></a></li></ol>
+  
   </div>
 
 <div id="asidepart">
