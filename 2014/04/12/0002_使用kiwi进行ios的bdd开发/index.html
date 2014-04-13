@@ -4,13 +4,12 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>0001_记一次配置Karma跟RequireJS的过程 | Code4Blues</title>
+    <title>0002_使用Kiwi进行iOS的BDD开发 | Code4Blues</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="kg8gk">
     
-    <meta name="description" content="昨个儿乱翻书的时候，在书中看到了使用Karma进行测试的教程，于是照着步骤新建了一个工程，然后改造了下。在满怀希望地看着测试在三大浏览器下运行，希望它们都能通过的时候，出问题了。spec文件中的依赖关系没法解决，第三方库文件没有办法加载，好吧，其实其他的spec文件也都加载不了，这是怎么回事呢？
-目">
+    <meta name="description" content="Kiwi是一个iOS的BDD测试框架，这篇文章TDD的iOS开发初步以及Kiwi使用入门里有对它的入门介绍。另外也可以到Kiwi的Github Wiki里进行学习，里面也有官方文档以及相关链接。碰到问题还可以到Kiwi的Google Group里咨询。在这里我会写一些开发过程中个人碰到的问题，以及一">
     
     
     
@@ -66,15 +65,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/03/08/0001_记一次配置karma跟requirejs的过程/" title="0001_记一次配置Karma跟RequireJS的过程" itemprop="url">0001_记一次配置Karma跟RequireJS的过程</a>
+      <a href="/2014/04/12/0002_使用kiwi进行ios的bdd开发/" title="0002_使用Kiwi进行iOS的BDD开发" itemprop="url">0002_使用Kiwi进行iOS的BDD开发</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://code4blues.github.io" title="kg8gk">kg8gk</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-03-08T00:19:14.000Z" itemprop="datePublished">3月 8 2014</time>
-    更新日期:<time datetime="2014-04-13T01:05:52.000Z" itemprop="dateModified">4月 13 2014</time>
+    <time datetime="2014-04-12T09:10:29.000Z" itemprop="datePublished">4月 12 2014</time>
+    更新日期:<time datetime="2014-04-13T01:05:12.000Z" itemprop="dateModified">4月 13 2014</time>
     
   </p>
 </header>
@@ -83,129 +82,73 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#mocks-stubs"><span class="toc-number">1.</span> <span class="toc-text">Mocks &amp;&amp; Stubs</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#stub-withblock-"><span class="toc-number">1.1.</span> <span class="toc-text">stub:withBlock:</span></a></li></ol>
 		</div>
 		
-		<p>昨个儿乱翻书的时候，在书中看到了使用Karma进行测试的教程，于是照着步骤新建了一个工程，然后改造了下。在满怀希望地看着测试在三大浏览器下运行，希望它们都能通过的时候，出问题了。spec文件中的依赖关系没法解决，第三方库文件没有办法加载，好吧，其实其他的spec文件也都加载不了，这是怎么回事呢？</p>
-<p>目录结构如下（请忽略糟糕的结构）:</p>
-<ul>
-<li>app/<ul>
-<li>backend/</li>
-<li>frontend/<ul>
-<li>controllers/</li>
-<li>directives/</li>
-<li>services/</li>
-</ul>
-</li>
-<li>test/<ul>
-<li>controllers/</li>
-<li>directives/</li>
-<li>services/</li>
-<li>karma.conf.js</li>
-<li>main.spec.js</li>
-<li>test-main-cfg.js</li>
-</ul>
-</li>
-<li>vendor/ <ul>
-<li>underscore/underscore.js</li>
-<li>angular/angular.min.js</li>
-<li>其他文件</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p>Karma配置文件<em>karma.conf.js</em>的内容:</p>
-<pre><code>module.exports = function(config) {
-    config.set({
-    basePath: &#39;&#39;,
-    frameworks: [&#39;jasmine&#39;, &#39;requirejs&#39;],
-    files: [
-        {pattern: &#39;test/**/*.spec.js&#39;, included: false},
-        {pattern: &#39;vendor/angular/angular.min.js&#39;, included: false},
-        {pattern: &#39;vendor/angular/angular-route.min.js&#39;, included: false},
-        {pattern: &#39;vendor/angular/angular-mocks.js&#39;, included: false},
-        {pattern: &#39;backend/public/**/*.js&#39;, included: false},
-        {pattern: &#39;test/main.spec.js&#39;, included: false},
-        &#39;test/test-main-cfg.js&#39;
-    ],
-    exclude: [
-        &#39;**/*.swp&#39;
-    ],
-    port: 9876,
-    colors: true,
-    logLevel: config.LOG_INFO,
-    autoWatch: true,
-    browsers: [&#39;Chrome&#39;, &#39;Firefox&#39;, &#39;Safari&#39;],
-    captureTimeout: 60000,
-    singleRun: false
-    });
-};
-</code></pre><p>接下来是RequireJS配置文件以及Karma启动相关的配置，在<em>test-main-cfg.js</em>中：</p>
-<pre><code>require.config({
-  baseUrl: &#39;/base/&#39;,
-  paths: {
-    &#39;jquery&#39;: &quot;vendor/jquery/dist/jquery.min&quot;,
-    &#39;angular&#39;: &#39;vendor/angular/angular.min&#39;,
-    &#39;angularRoute&#39;: &#39;vendor/angular/        anguar-route.min&#39;,
-    &#39;angularMocks&#39;: &#39;vendor/angular/angular-mocks&#39;,
-    &#39;underscore&#39;: &#39;vendor/underscore/underscore&#39;
-  },
-  shim: {
-    &#39;underscore&#39;: {
-      exports: &#39;_&#39;
-    },
-    &#39;jquery&#39;: {
-      exports: &#39;jquery&#39;
-    },
-    &#39;angular&#39;: {
-      deps: [&#39;jquery&#39;],
-      exports: &#39;angular&#39;
-    },
-    &#39;angularRoute&#39;: {
-      deps: [&#39;angular&#39;],
-      exports: &#39;angularRoute&#39;
-    },
-    &#39;angularMocks&#39;: {
-      deps:[&#39;angular&#39;],
-      exports: &#39;angularMocks&#39;
+		<p>Kiwi是一个iOS的BDD测试框架，这篇文章<a href="http://onevcat.com/2014/02/ios-test-with-kiwi/" target="_blank">TDD的iOS开发初步以及Kiwi使用入门</a>里有对它的入门介绍。另外也可以到Kiwi的<a href="https://github.com/allending/kiwi/wiki" target="_blank">Github Wiki</a>里进行学习，里面也有官方文档以及相关链接。碰到问题还可以到Kiwi的<a href="https://groups.google.com/forum/#!forum/kiwi-bdd" target="_blank">Google Group</a>里咨询。在这里我会写一些开发过程中个人碰到的问题，以及一些文档上没有介绍的东西（至少目前还没看到），持续更新。</p>
+<h2 id="mocks-stubs">Mocks &amp;&amp; Stubs</h2>
+<h3 id="stub-withblock-">stub:withBlock:</h3>
+<p>Kiwi的官方Wiki上并没有对这个方法的描述，是我在Xcode中敲代码的时候弹提示出来才知道有这么个方法。经过在<a href="https://groups.google.com/forum/#!forum/kiwi-bdd" target="_blank">Kiwi Group</a>上发问，并结合自己的代码，大概知道怎么用了。</p>
+<p>在Xcode中可以看到这个方法的全貌：</p>
+<pre><code>-(void) stub:(SEL)aSelector withBlock:^id(NSArray *params)block
+</code></pre><p>当我们使用它stub某个方法时，在该方法每次被调用时，Kiwi都会用<code>block</code>参数替换被stub方法的实现。</p>
+<p>其中被stub方法的参数全部被捕获了，，可以通过<code>params</code>数组来获取，索引从0开始。如果参数是基本类型（primitive types）的值，那么这个值会被包装成一个<code>NSValue</code>。</p>
+<p><code>block</code>的返回值就是被stub方法的返回值。如果stub了一个返回值为<code>void</code>的方法，我们在<code>block</code>的最后返回<code>nil</code>即可。注意这个返回值是必须提供的，不然Xcode会报错。</p>
+<p>一个很著名的Mock库，<a href="http://ocmock.org" target="_blank">OCMock</a>也有类似的方法，<code>andDo</code>，这里就不说了，<a href="http://hackazach.net/code/2014/03/03/effective-testing-with-ocmock/" target="_blank">这篇文章</a>的<strong>Dealing with block arguments</strong>部分有提到，感兴趣的可以自己去看看。</p>
+<p>接下来看看具体的代码，我这里用了<a href="https://github.com/AFNetworking/AFNetworking" target="_blank">AFNetworking</a>来举例。</p>
+<p>假设有一个方法调用了<code>AFHTTPRequestOperationManager</code>的<code>POST:parameters:success:failure:</code>方法，其中success参数跟failure参数是block，分别在POST请求发送成功跟失败时调用。而我们需要验证请求成功以及请求失败的情况下代码是否正确，这时候就可以用到<code>stub:withBlock:</code>了。</p>
+<p>首先是<code>POST:parameters:success:failure:</code>的代码：</p>
+<pre><code>- (void)requestPersonalInfoWithCompleteHandler:(void (^)(NSError *error, id res) {
+
+  AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+  [manager POST:@&quot;http://example.com&quot; paramters:@{@&quot;name&quot;: @&quot;Blues&quot;}
+    success:^(AFHTTPRequestOperation *operation, id responseObject) {
+
+      // Something to do with responseObject
+      complete(nil， responseObject);
     }
-  },
-  deps: tests,
-  callback: window.__karma__.start
+    failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+
+      // Deal with error
+      complete(error, nil);
+    }];
+}
+</code></pre><p>在我们的测试代码中，捕获了<code>success</code> block，然后可以构造一个responseObject传递给它：</p>
+<pre><code>it(@&quot;receives correct response if request succeed&quot;, ^{
+
+  NSDictionary *response = @{@&quot;gender&quot;: @&quot;male&quot;};
+  __block NSDictionary *responseReceived;
+
+  // 进行mock设置
+  AFHTTPRequestOperationManager *mockManager = [AFHTTPRequestOperationManager mock];
+  [AFHTTPRequestOperationManager stub:@selector(manager) andReturn:mockManager];
+  [mockManager stub:@selector(POST:paramters:success:failure:) withBlock:^id(NSArray *params) {
+
+    // 获取success block
+    void (^success)(AFHTTPRequestOperation *, id) = params[2];
+    success(response);
+
+    // 记得前面提过的么，这里必须返回一个值
+    return nil;
+  }];
+
+  // 调用函数
+  [myObject requestPersonalInfoWithCompleteHandler:^(NSError *err, id res) {
+      responseReceived = res;
+  }];
+
+  // 最后进行验证
+  [[expectFutureValue(responseReceived) shouldEventually] equal:response];
 });
-</code></pre><p>定义了一个测试用的spec文件， <em>main.spec.js</em>：</p>
-<pre><code>define([&#39;underscore&#39;, &#39;jquery&#39;, &#39;angular&#39;, &#39;angularRoute&#39;, &#39;angularMocks&#39;], function(_) {
-  describe(&#39;UnitTest: ParamsSettings&#39;, function(_) {
-    it(&#39;is defined&#39;, function() {
-      expect(_.size([1,2,3])).toEqual(3);
-    })
-  })
-});
-</code></pre><p>启动Karma后报错，没有办法找到underscore,jquery等等这些文件。在浏览器里头看，这些都是404请求，根本定位不到它们，在浏览器里头直接敲地址，也是404，怎么会这样呢？</p>
-<p>后来写了另外一个测试文件another.spec.js，放在test目录下，跟main.spec.js同级。然后通过改变main.spec.js文件的url，把文件名换成another.spec.js，还是找不到。</p>
-<p>Karma的服务器没有提供对这些文件的访问，是因为需要在<code>file</code>属性中设置它们的位置：</p>
-<pre><code>files: [
-    {pattern: &#39;vendor/**/*.js&#39;, included: false},
-    {pattern: &#39;vendor/**/*.map&#39;, included: false},
-    {pattern: &#39;backend/public/**/*.js&#39;, included: false},
-    {pattern: &#39;test/*.spec.js&#39;, included: false},
-    {pattern: &#39;test/**/*.spec.js&#39;, included: false},
-    {pattern: &#39;test/main.spec.js&#39;, included: false},
-    &#39;test/test-main-cfg.js&#39;
-  ]
-</code></pre><p>正如<a href="http://karma-runner.github.io/0.10/config/files.html" target="_blank">官方文档</a>里头写着的</p>
-<blockquote>
-<p>The <strong>files</strong> array determines which files are included in the browser and which files are watched and served by Karma.</p>
-</blockquote>
-<p>所以说，没事要多翻翻文档，就不会浪费这一个晚上多两个小时白天的时间了，sigh。</p>
+</code></pre><p>敲下<em>Command + U</em>，看下我们的成果（PS：代码是从我的个人项目中剪切下来的，不保证一定能运行= =）。</p>
+<p>至于验证请求失败的情况，过程类似，我这里就不赘述了，大家可以自己试试。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/JavaScript/">JavaScript</a><a href="/tags/Karma/">Karma</a><a href="/tags/RequireJS/">RequireJS</a>
+  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/Kiwi/">Kiwi</a><a href="/tags/BDD/">BDD</a>
   </div>
 
 
@@ -213,7 +156,7 @@
 
 <div class="article-share" id="share">
 
-  <div data-url="http://code4blues.github.io/2014/03/08/0001_记一次配置karma跟requirejs的过程/" data-title="0001_记一次配置Karma跟RequireJS的过程 | Code4Blues" data-tsina="null" class="share clearfix">
+  <div data-url="http://code4blues.github.io/2014/04/12/0002_使用kiwi进行ios的bdd开发/" data-title="0002_使用Kiwi进行iOS的BDD开发 | Code4Blues" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -222,19 +165,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2014/04/12/0002_使用kiwi进行ios的bdd开发/" title="0002_使用Kiwi进行iOS的BDD开发">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  0002_使用Kiwi进行iOS的BDD开发</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2014/03/04/0000_一些可以使用的第三方库-for-ios/"  title="0000_一些可以使用的第三方库 for iOS">
+<a href="/2014/03/08/0001_记一次配置karma跟requirejs的过程/"  title="0001_记一次配置Karma跟RequireJS的过程">
  <strong>NEXT:</strong><br/> 
- <span>0000_一些可以使用的第三方库 for iOS
+ <span>0001_记一次配置Karma跟RequireJS的过程
 </span>
 </a>
 </div>
@@ -247,7 +182,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#mocks-stubs"><span class="toc-number">1.</span> <span class="toc-text">Mocks &amp;&amp; Stubs</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#stub-withblock-"><span class="toc-number">1.1.</span> <span class="toc-text">stub:withBlock:</span></a></li></ol>
   </div>
 
 <div id="asidepart">
