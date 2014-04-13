@@ -73,7 +73,7 @@
     </p>
   <p class="article-time">
     <time datetime="2014-04-12T09:10:29.000Z" itemprop="datePublished">4月 12 2014</time>
-    更新日期:<time datetime="2014-04-13T01:05:12.000Z" itemprop="dateModified">4月 13 2014</time>
+    更新日期:<time datetime="2014-04-13T01:09:02.000Z" itemprop="dateModified">4月 13 2014</time>
     
   </p>
 </header>
@@ -98,7 +98,7 @@
 <p>接下来看看具体的代码，我这里用了<a href="https://github.com/AFNetworking/AFNetworking" target="_blank">AFNetworking</a>来举例。</p>
 <p>假设有一个方法调用了<code>AFHTTPRequestOperationManager</code>的<code>POST:parameters:success:failure:</code>方法，其中success参数跟failure参数是block，分别在POST请求发送成功跟失败时调用。而我们需要验证请求成功以及请求失败的情况下代码是否正确，这时候就可以用到<code>stub:withBlock:</code>了。</p>
 <p>首先是<code>POST:parameters:success:failure:</code>的代码：</p>
-<pre><code>- (void)requestPersonalInfoWithCompleteHandler:(void (^)(NSError *error, id res) {
+<pre><code>- (void)requestPersonalInfoWithCompleteHandler:(void (^)(NSError *error, id res))complete {
 
   AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
   [manager POST:@&quot;http://example.com&quot; paramters:@{@&quot;name&quot;: @&quot;Blues&quot;}
