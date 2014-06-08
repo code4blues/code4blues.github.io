@@ -4,16 +4,15 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>0003_记一次使用CocoaPods后的编译错误 | Code4Blues</title>
+    <title>0007_点击界面空白处使得键盘消失 | Code4Blues</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="kg8gk">
     
-    <meta name="description" content="一个问题
-这一次的编译错误出现在我把正在写得静态库添加到同时开发中的App中时，如图
-
-在SO上搜了一下，似乎没有人问过这方面的问题（可能是关键字不对）。自己问了个问题，至今没有人回答，sigh。不过期间浏览了几个也是编译出错的问题，给了我解决问题的思路。
-说一下前提吧，我有两个都通过CocoaPo">
+    <meta name="description" content="点击界面空白处使得键盘消失
+在输入内容之后，除了点击Return可以使得键盘消失之外，点击界面空白处让键盘消失也是非常方便的。
+使用UIGestureRecognizer
+一种方法是使用UIGestureRecognizer来实现，同时利用了UIGestureRecognizerDelegate中的">
     
     
     
@@ -69,15 +68,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/04/25/0003_记一次使用cocoapods后的编译错误/" title="0003_记一次使用CocoaPods后的编译错误" itemprop="url">0003_记一次使用CocoaPods后的编译错误</a>
+      <a href="/2014/06/07/0007_点击界面空白处使得键盘消失/" title="0007_点击界面空白处使得键盘消失" itemprop="url">0007_点击界面空白处使得键盘消失</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://code4blues.github.io" title="kg8gk">kg8gk</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-04-25T15:20:01.000Z" itemprop="datePublished">4月 25 2014</time>
-    更新日期:<time datetime="2014-04-26T23:11:12.000Z" itemprop="dateModified">4月 27 2014</time>
+    <time datetime="2014-06-07T14:17:25.000Z" itemprop="datePublished">6月 7 2014</time>
+    更新日期:<time datetime="2014-06-08T02:16:45.000Z" itemprop="dateModified">6月 8 2014</time>
     
   </p>
 </header>
@@ -86,48 +85,53 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">1.</span> <span class="toc-text">一个问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">2.</span> <span class="toc-text">一个不算优雅的解决办法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#another"><span class="toc-number">3.</span> <span class="toc-text">Another</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">1.</span> <span class="toc-text">点击界面空白处使得键盘消失</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#-uigesturerecognizer"><span class="toc-number">1.1.</span> <span class="toc-text">使用UIGestureRecognizer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-uicontrol"><span class="toc-number">1.2.</span> <span class="toc-text">使用UIControl</span></a></li></ol>
 		</div>
 		
-		<h2 id="-">一个问题</h2>
-<p>这一次的编译错误出现在我把正在写得静态库添加到同时开发中的App中时，如图</p>
-<p><img src="/img/0003_compile_error.png" alt="编译错误" title="编译错误"></p>
-<p>在SO上搜了一下，似乎没有人问过这方面的问题（可能是关键字不对）。自己问了个问题，至今没有人回答，sigh。不过期间浏览了几个也是编译出错的问题，给了我解决问题的思路。</p>
-<p>说一下前提吧，我有两个都通过CocoaPods来管理依赖的程序，一个静态库，一个App。App依赖于静态库，它们同时都依赖于：</p>
-<ol>
-<li>AFNetworking</li>
-<li>ReactiveCocoa</li>
-</ol>
-<p>因为App跟静态库同时在开发，所以静态库被我整成了一个本地Podspec，也通过CocoaPods管理。本地Podspec的制作参照了<a href="http://www.coneboy.com/?p=1375" target="_blank">这篇文章</a>。</p>
-<p>静态库本身是可以直接编译的，所以原以为通过CocoaPods将它引入到App中也不会有问题，但现实往往不尽如人意。</p>
-<h2 id="-">一个不算优雅的解决办法</h2>
-<p>在Xcode中，项目的依赖关系可以在<strong>Build Phases</strong>中看到，具体步骤：</p>
-<ol>
-<li>选择左边<em>Project Navigator</em>中的项目，列表中的第一个条目</li>
-<li>选中右边<em>Targets</em>中正确的目标，可以看到右边上方有一排Tab，点开里面的<em>Build Phases</em>，</li>
-<li><strong>Link Binary With Libraries</strong></li>
-</ol>
-<p>首先是选中原本自带的<strong>libPods-*.a</strong>文件，点击<strong>-</strong>号删掉它。然后点击<strong>+</strong>号，把依赖的两个第三方库</p>
-<ul>
-<li><strong>libPods-*-AFNetworking.a</strong></li>
-<li><strong>libPods-*-ReactiveCocoa.a</strong></li>
-</ul>
-<p>以及静态库的依赖</p>
-<ul>
-<li><strong>libPods-*-MyLibrary.a</strong></li>
-</ul>
-<p>添加进去，编译一下，应该错误就没有了。</p>
-<p>注意，如果静态库的代码更新了的话，要敲<code>pod update</code>更新。</p>
-<h2 id="another">Another</h2>
-<p>另外，在某次更新完代码之后，出现了符号重复的情况，这时候把原先手动添加的库删掉，保留更新代码后新添加的<strong>libPods-MyApp.a</strong>文件，这时候编译也没问题了。</p>
-<p>真奇怪...</p>
+		<h1 id="-">点击界面空白处使得键盘消失</h1>
+<p>在输入内容之后，除了点击Return可以使得键盘消失之外，点击界面空白处让键盘消失也是非常方便的。</p>
+<h2 id="-uigesturerecognizer">使用UIGestureRecognizer</h2>
+<p>一种方法是使用<em>UIGestureRecognizer</em>来实现，同时利用了<em>UIGestureRecognizerDelegate</em>中的<strong>-(BOOL)gestureRecognizer:shouldReceiveTouch:</strong>方法。</p>
+<p>这种方法首先要让界面的ViewController Confirm<em>UIGesutureRecognizerDelegate</em>，然后在界面初始化的时候添加一个<em>UITapGestureRecognizer</em>。在相应的Action中对self.view发送<em>endEditing:</em>消息：</p>
+<pre><code>- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+  self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+
+  if (self) {
+      UITapGestureRecognizer *backgroundTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backgroundTapped:)];
+      backgroundTap.delegate = self;
+      [self.view addGestureRecognizer:backgroundTap];
+  }
+}
+
+- (void)backgroundTapped:(id)sender {
+  [self.view endEditing:YES];
+}
+</code></pre><p>一般情况下这样就可以保证键盘在我们点击界面其他地方的时候会消失。但是这会造成一个问题，如果我们在界面的下方有一个UIToolBar的时候，UIToolbar中的按钮（UIBarButtonItem）是不会响应其动作的。</p>
+<p>至于为什么没有响应，个人感觉是<em>UIBarButtonItem</em>虽然是被点击了，但是其响应得却是我们前面注册的手势的回调。</p>
+<p>具体是Responder Chain还是什么的原因，这里就不探究了。可以是说手势动作的优先级高于了按钮本身动作的优先级，这显然是个Bug（这个Bug是在iOS 7上出现的，低版本没试过，但是在iOS 8中被干掉了）。</p>
+<p>这时候我们就需要辨别Tap动作的作用对象，上面没有用到的<em>UIGestureRecognizerDelegate</em>就起到作用了。</p>
+<p>实现上面提到的<strong>-(BOOL)gestureRecognizer:shouldReceiveTouch:</strong>方法，我们需要在该方法中判断<code>touch.view</code>是不是工具栏按钮本身的View。</p>
+<p>如果我们在方法中加上断点观察点击到工具栏按钮时，<code>touch.view</code>的class，可以看到其类是<em>UIToolbarButton</em>，而这个类不是公开，我们是没有办法使用到它。只能退而求其次，判断<code>touch.view</code>是否是UIControl了。而为什么可以使用UIControl呢，因为<em>UIToolbarButton</em>的<em>superclass</em>就是UIControl。而对于UIControl来说，如果它能响应用户交互事件，则会自动响应本身的事件，而不是我们的手势事件。</p>
+<p>代码如下：</p>
+<pre><code>- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRegonizer shouldReceiveTouch:(UITouch *)touch {
+  if ([touch.view isKindOf:[UIControl class]]) {
+    return NO;
+  }
+  return YES;
+}
+</code></pre><p>这样，在iOS 7中，就能使得键盘在点击界面背景时消失了，副作用不大。。。</p>
+<h2 id="-uicontrol">使用UIControl</h2>
+<p><em>UIControl</em>是<em>UIView</em>的子类，如果界面的<em>UIView</em>也能像按钮那样设置Action，可以直接点击界面触发相关动作使得键盘消失，那就方便得多了。</p>
+<p>可惜是没有办法对直接加上Action的，要动用IB。选中界面所在的xib文件，然后选中view，在Utilities面板中选中Identity Inspector，可以看到Custom Section下面是Class一项的值是<em>UIView</em>，我们把它改成<em>UIControl</em>。</p>
+<p>接着打开Assistant Editor，按住option选中界面的实现，然后从view上面Control-drag到实现，这时就可以看到平时设置按钮动作一样的弹出框，Event类型为Touch Up Inside，在生成的IBAction方法中跟前面一样发送<code>endEditing:</code>方法就行了。</p>
+<p>这个法子比前面Gesture的方法要简单很多...</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/CocoaPods/">CocoaPods</a>
+  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/UI/">UI</a>
   </div>
 
 
@@ -135,7 +139,7 @@
 
 <div class="article-share" id="share">
 
-  <div data-url="http://code4blues.github.io/2014/04/25/0003_记一次使用cocoapods后的编译错误/" data-title="0003_记一次使用CocoaPods后的编译错误 | Code4Blues" data-tsina="null" class="share clearfix">
+  <div data-url="http://code4blues.github.io/2014/06/07/0007_点击界面空白处使得键盘消失/" data-title="0007_点击界面空白处使得键盘消失 | Code4Blues" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -144,19 +148,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2014/05/17/0004_读书笔记：《触动人心》/" title="0004_读书笔记：《触动人心》">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  0004_读书笔记：《触动人心》</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2014/04/12/0002_使用kiwi进行ios的bdd开发/"  title="0002_使用Kiwi进行iOS的BDD开发">
+<a href="/2014/06/02/0006_使用navigationcontroller时，在viewcontroller之间传递数据的几种方法/"  title="0006_使用NavigationController时，在ViewController之间传递数据的几种方法">
  <strong>NEXT:</strong><br/> 
- <span>0002_使用Kiwi进行iOS的BDD开发
+ <span>0006_使用NavigationController时，在ViewController之间传递数据的几种方法
 </span>
 </a>
 </div>
@@ -169,7 +165,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">1.</span> <span class="toc-text">一个问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">2.</span> <span class="toc-text">一个不算优雅的解决办法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#another"><span class="toc-number">3.</span> <span class="toc-text">Another</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">1.</span> <span class="toc-text">点击界面空白处使得键盘消失</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#-uigesturerecognizer"><span class="toc-number">1.1.</span> <span class="toc-text">使用UIGestureRecognizer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-uicontrol"><span class="toc-number">1.2.</span> <span class="toc-text">使用UIControl</span></a></li></ol>
   </div>
 
 <div id="asidepart">

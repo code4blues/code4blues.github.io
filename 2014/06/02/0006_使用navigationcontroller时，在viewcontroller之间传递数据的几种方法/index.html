@@ -4,16 +4,13 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>0003_记一次使用CocoaPods后的编译错误 | Code4Blues</title>
+    <title>0006_使用NavigationController时，在ViewController之间传递数据的几种方法 | Code4Blues</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="kg8gk">
     
-    <meta name="description" content="一个问题
-这一次的编译错误出现在我把正在写得静态库添加到同时开发中的App中时，如图
-
-在SO上搜了一下，似乎没有人问过这方面的问题（可能是关键字不对）。自己问了个问题，至今没有人回答，sigh。不过期间浏览了几个也是编译出错的问题，给了我解决问题的思路。
-说一下前提吧，我有两个都通过CocoaPo">
+    <meta name="description" content="Psssing data between UIViewControllers when using UINavigationViewController
+这一篇的内容是关于在使用NavigationViewController时，数据是怎么在众多UIViewController之间传递的，包括了从上">
     
     
     
@@ -69,15 +66,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/04/25/0003_记一次使用cocoapods后的编译错误/" title="0003_记一次使用CocoaPods后的编译错误" itemprop="url">0003_记一次使用CocoaPods后的编译错误</a>
+      <a href="/2014/06/02/0006_使用navigationcontroller时，在viewcontroller之间传递数据的几种方法/" title="0006_使用NavigationController时，在ViewController之间传递数据的几种方法" itemprop="url">0006_使用NavigationController时，在ViewController之间传递数据的几种方法</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://code4blues.github.io" title="kg8gk">kg8gk</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-04-25T15:20:01.000Z" itemprop="datePublished">4月 25 2014</time>
-    更新日期:<time datetime="2014-04-26T23:11:12.000Z" itemprop="dateModified">4月 27 2014</time>
+    <time datetime="2014-06-01T23:28:19.000Z" itemprop="datePublished">6月 2 2014</time>
+    更新日期:<time datetime="2014-06-01T23:49:09.000Z" itemprop="dateModified">6月 2 2014</time>
     
   </p>
 </header>
@@ -86,48 +83,27 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">1.</span> <span class="toc-text">一个问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">2.</span> <span class="toc-text">一个不算优雅的解决办法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#another"><span class="toc-number">3.</span> <span class="toc-text">Another</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#psssing-data-between-uiviewcontrollers-when-using-uinavigationviewcontroller"><span class="toc-number">1.</span> <span class="toc-text">Psssing data between UIViewControllers when using UINavigationViewController</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#-viewcontroller-viewcontroller"><span class="toc-number">1.1.</span> <span class="toc-text">在前一个ViewController中传递数据给下一个ViewController</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#-property-"><span class="toc-number">1.1.1.</span> <span class="toc-text">使用公开可写的property传递数据</span></a></li></ol>
 		</div>
 		
-		<h2 id="-">一个问题</h2>
-<p>这一次的编译错误出现在我把正在写得静态库添加到同时开发中的App中时，如图</p>
-<p><img src="/img/0003_compile_error.png" alt="编译错误" title="编译错误"></p>
-<p>在SO上搜了一下，似乎没有人问过这方面的问题（可能是关键字不对）。自己问了个问题，至今没有人回答，sigh。不过期间浏览了几个也是编译出错的问题，给了我解决问题的思路。</p>
-<p>说一下前提吧，我有两个都通过CocoaPods来管理依赖的程序，一个静态库，一个App。App依赖于静态库，它们同时都依赖于：</p>
-<ol>
-<li>AFNetworking</li>
-<li>ReactiveCocoa</li>
-</ol>
-<p>因为App跟静态库同时在开发，所以静态库被我整成了一个本地Podspec，也通过CocoaPods管理。本地Podspec的制作参照了<a href="http://www.coneboy.com/?p=1375" target="_blank">这篇文章</a>。</p>
-<p>静态库本身是可以直接编译的，所以原以为通过CocoaPods将它引入到App中也不会有问题，但现实往往不尽如人意。</p>
-<h2 id="-">一个不算优雅的解决办法</h2>
-<p>在Xcode中，项目的依赖关系可以在<strong>Build Phases</strong>中看到，具体步骤：</p>
-<ol>
-<li>选择左边<em>Project Navigator</em>中的项目，列表中的第一个条目</li>
-<li>选中右边<em>Targets</em>中正确的目标，可以看到右边上方有一排Tab，点开里面的<em>Build Phases</em>，</li>
-<li><strong>Link Binary With Libraries</strong></li>
-</ol>
-<p>首先是选中原本自带的<strong>libPods-*.a</strong>文件，点击<strong>-</strong>号删掉它。然后点击<strong>+</strong>号，把依赖的两个第三方库</p>
-<ul>
-<li><strong>libPods-*-AFNetworking.a</strong></li>
-<li><strong>libPods-*-ReactiveCocoa.a</strong></li>
-</ul>
-<p>以及静态库的依赖</p>
-<ul>
-<li><strong>libPods-*-MyLibrary.a</strong></li>
-</ul>
-<p>添加进去，编译一下，应该错误就没有了。</p>
-<p>注意，如果静态库的代码更新了的话，要敲<code>pod update</code>更新。</p>
-<h2 id="another">Another</h2>
-<p>另外，在某次更新完代码之后，出现了符号重复的情况，这时候把原先手动添加的库删掉，保留更新代码后新添加的<strong>libPods-MyApp.a</strong>文件，这时候编译也没问题了。</p>
-<p>真奇怪...</p>
-  
+		<h1 id="psssing-data-between-uiviewcontrollers-when-using-uinavigationviewcontroller">Psssing data between UIViewControllers when using UINavigationViewController</h1>
+<p>这一篇的内容是关于在使用NavigationViewController时，数据是怎么在众多UIViewController之间传递的，包括了从上一个ViewController传给下一个ViewController，也包括了从下一个ViewController传回给上一个ViewController等等。</p>
+<h2 id="-viewcontroller-viewcontroller">在前一个ViewController中传递数据给下一个ViewController</h2>
+<h3 id="-property-">使用公开可写的property传递数据</h3>
+<p>首先是把数据从前一个ViewController传给下一个ViewController，假设上一个ViewController名为<em>PreviousViewController</em>，而下一个ViewController名为<em>NextViewController</em>。</p>
+<p>要这样传递数据，首先我们要保证数据在即将接收它的ViewController中是一个<em>公开且可写</em>的property，即将它声明在interface中，且不是<em>readonly</em>。</p>
+<p>由于PreviousViewController负责创建NextViewController，那么在创建完NextViewController后，传给NavigationViewController之前，我们需要调用数据property的setter方法，将数据设置好：</p>
+<pre><code>// 在负责显示NextViewController的代码中
+NextViewController *nextViewController = [[NextViewController alloc] init];
+[nextViewController setFoo: someData];
+[self.navigationController pushViewController:nextViewController animated:YES];
+</code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/CocoaPods/">CocoaPods</a>
+  <span></span> <a href="/tags/iOS/">iOS</a>
   </div>
 
 
@@ -135,7 +111,7 @@
 
 <div class="article-share" id="share">
 
-  <div data-url="http://code4blues.github.io/2014/04/25/0003_记一次使用cocoapods后的编译错误/" data-title="0003_记一次使用CocoaPods后的编译错误 | Code4Blues" data-tsina="null" class="share clearfix">
+  <div data-url="http://code4blues.github.io/2014/06/02/0006_使用navigationcontroller时，在viewcontroller之间传递数据的几种方法/" data-title="0006_使用NavigationController时，在ViewController之间传递数据的几种方法 | Code4Blues" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -145,18 +121,18 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2014/05/17/0004_读书笔记：《触动人心》/" title="0004_读书笔记：《触动人心》">
+ <a href="/2014/06/07/0007_点击界面空白处使得键盘消失/" title="0007_点击界面空白处使得键盘消失">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  0004_读书笔记：《触动人心》</span>
+  0007_点击界面空白处使得键盘消失</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2014/04/12/0002_使用kiwi进行ios的bdd开发/"  title="0002_使用Kiwi进行iOS的BDD开发">
+<a href="/2014/05/22/0005_xcode的一些快捷键/"  title="0005_Xcode的一些快捷键">
  <strong>NEXT:</strong><br/> 
- <span>0002_使用Kiwi进行iOS的BDD开发
+ <span>0005_Xcode的一些快捷键
 </span>
 </a>
 </div>
@@ -169,7 +145,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">1.</span> <span class="toc-text">一个问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">2.</span> <span class="toc-text">一个不算优雅的解决办法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#another"><span class="toc-number">3.</span> <span class="toc-text">Another</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#psssing-data-between-uiviewcontrollers-when-using-uinavigationviewcontroller"><span class="toc-number">1.</span> <span class="toc-text">Psssing data between UIViewControllers when using UINavigationViewController</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#-viewcontroller-viewcontroller"><span class="toc-number">1.1.</span> <span class="toc-text">在前一个ViewController中传递数据给下一个ViewController</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#-property-"><span class="toc-number">1.1.1.</span> <span class="toc-text">使用公开可写的property传递数据</span></a></li></ol>
   </div>
 
 <div id="asidepart">
