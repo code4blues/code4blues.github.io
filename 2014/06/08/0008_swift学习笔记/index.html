@@ -4,29 +4,17 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>0000_一些可以使用的第三方库 for iOS | Code4Blues</title>
+    <title>0008_Swift学习笔记 | Code4Blues</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="kg8gk">
     
-    <meta name="description" content="正在使用以及学习使用它们
-不断更新中
-
-第三方库
-
-ReactiveCocoa
-AFNetworking
-
-
-测试框架
-
-Kiwi
-
-
-工具
-
-CocoaPods
-Alcatraz">
+    <meta name="description" content="Swift学习笔记
+Selector跟@selector
+Swift的Selector跟ObjC的@selector是一样的，返回一个SEL类型。
+不同的是，ObjC的@selector的参数是标识符，而Swift的Selector的参数时字符串。
+首先是ObjC的代码：
+// Objective-">
     
     
     
@@ -82,15 +70,15 @@ Alcatraz">
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/03/04/0000_一些可以使用的第三方库-for-ios/" title="0000_一些可以使用的第三方库 for iOS" itemprop="url">0000_一些可以使用的第三方库 for iOS</a>
+      <a href="/2014/06/08/0008_swift学习笔记/" title="0008_Swift学习笔记" itemprop="url">0008_Swift学习笔记</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://code4blues.github.io" title="kg8gk">kg8gk</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-03-04T14:36:09.000Z" itemprop="datePublished">3月 4 2014</time>
-    更新日期:<time datetime="2014-04-13T01:07:09.000Z" itemprop="dateModified">4月 13 2014</time>
+    <time datetime="2014-06-08T04:23:14.000Z" itemprop="datePublished">6月 8 2014</time>
+    更新日期:<time datetime="2014-06-09T22:09:37.000Z" itemprop="dateModified">6月 10 2014</time>
     
   </p>
 </header>
@@ -99,37 +87,41 @@ Alcatraz">
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#-"><span class="toc-number">1.</span> <span class="toc-text">正在使用以及学习使用它们</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#swift-"><span class="toc-number">1.</span> <span class="toc-text">Swift学习笔记</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#selector-selector"><span class="toc-number">1.1.</span> <span class="toc-text">Selector跟@selector</span></a></li></ol>
 		</div>
 		
-		<h4 id="-">正在使用以及学习使用它们</h4>
-<p>不断更新中</p>
-<ul>
-<li><p>第三方库</p>
-<ul>
-<li><a href="https://github.com/ReactiveCocoa/ReactiveCocoa" target="_blank">ReactiveCocoa</a></li>
-<li><a href="https://github.com/AFNetworking/AFNetworking" target="_blank">AFNetworking</a></li>
-</ul>
-</li>
-<li><p>测试框架</p>
-<ul>
-<li><a href="https://github.com/allending/Kiwi" target="_blank">Kiwi</a></li>
-</ul>
-</li>
-<li><p>工具</p>
-<ul>
-<li><a href="http://http://cocoapods.org" target="_blank">CocoaPods</a></li>
-<li><a href="http://alcatraz.io" target="_blank">Alcatraz</a></li>
-</ul>
-</li>
-</ul>
-  
+		<h1 id="swift-">Swift学习笔记</h1>
+<h2 id="selector-selector">Selector跟@selector</h2>
+<p>Swift的<em>Selector</em>跟ObjC的<em>@selector</em>是一样的，返回一个<em>SEL</em>类型。</p>
+<p>不同的是，ObjC的<em>@selector</em>的参数是标识符，而Swift的<em>Selector</em>的参数时字符串。</p>
+<p>首先是ObjC的代码：</p>
+<pre><code>// Objective-C
+UITapGestureRecognizer *doubleTapGesture = [UITapGestureRecognizer alloc]
+  initWithTarget:self
+          action:@selector(someMethod:)];
+
+// Definition of someMethod:     
+- (void)someMethod:(UIGestureRecognizer *)gr {
+  // Do something
+}
+</code></pre><p>接下来是Swift的代码：</p>
+<pre><code>// Swift
+let doubleTapGesture = UITapGestureRecognizer(target: self, action:Selector(&quot;someMethod:&quot;))
+
+// Definition of someMethod:
+func someMethod(gr: UIGestureRecognizer) {
+  // Do something
+}
+</code></pre><p>其实在Swift中可以把Selector省略，直接用字符串代替：</p>
+<pre><code> // Swift
+ let doubTapGesture = UITapGestureRecognizer(target: self, action: &quot;someMethod&quot;)
+</code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/iOS/">iOS</a>
+  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/Swift/">Swift</a>
   </div>
 
 
@@ -137,7 +129,7 @@ Alcatraz">
 
 <div class="article-share" id="share">
 
-  <div data-url="http://code4blues.github.io/2014/03/04/0000_一些可以使用的第三方库-for-ios/" data-title="0000_一些可以使用的第三方库 for iOS | Code4Blues" data-tsina="null" class="share clearfix">
+  <div data-url="http://code4blues.github.io/2014/06/08/0008_swift学习笔记/" data-title="0008_Swift学习笔记 | Code4Blues" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -146,14 +138,14 @@ Alcatraz">
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2014/03/08/0001_记一次配置karma跟requirejs的过程/" title="0001_记一次配置Karma跟RequireJS的过程">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  0001_记一次配置Karma跟RequireJS的过程</span>
+
+<div class="next">
+<a href="/2014/06/07/0007_点击界面空白处使得键盘消失/"  title="0007_点击界面空白处使得键盘消失">
+ <strong>NEXT:</strong><br/> 
+ <span>0007_点击界面空白处使得键盘消失
+</span>
 </a>
 </div>
-
 
 </nav>
 
@@ -163,7 +155,7 @@ Alcatraz">
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#-"><span class="toc-number">1.</span> <span class="toc-text">正在使用以及学习使用它们</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#swift-"><span class="toc-number">1.</span> <span class="toc-text">Swift学习笔记</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#selector-selector"><span class="toc-number">1.1.</span> <span class="toc-text">Selector跟@selector</span></a></li></ol>
   </div>
 
 <div id="asidepart">
