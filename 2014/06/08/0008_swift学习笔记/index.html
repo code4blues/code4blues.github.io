@@ -78,7 +78,7 @@ Swift的Selector跟ObjC的@selector是一样的，返回一个SEL类型。
     </p>
   <p class="article-time">
     <time datetime="2014-06-08T04:23:14.000Z" itemprop="datePublished">6月 8 2014</time>
-    更新日期:<time datetime="2014-06-09T22:09:37.000Z" itemprop="dateModified">6月 10 2014</time>
+    更新日期:<time datetime="2014-06-29T22:34:21.000Z" itemprop="dateModified">6月 30 2014</time>
     
   </p>
 </header>
@@ -87,7 +87,7 @@ Swift的Selector跟ObjC的@selector是一样的，返回一个SEL类型。
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#swift-"><span class="toc-number">1.</span> <span class="toc-text">Swift学习笔记</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#selector-selector"><span class="toc-number">1.1.</span> <span class="toc-text">Selector跟@selector</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#swift-"><span class="toc-number">1.</span> <span class="toc-text">Swift学习笔记</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#selector-selector"><span class="toc-number">1.1.</span> <span class="toc-text">Selector跟@selector</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#quartzcore"><span class="toc-number">1.2.</span> <span class="toc-text">QuartzCore</span></a></li></ol>
 		</div>
 		
 		<h1 id="swift-">Swift学习笔记</h1>
@@ -115,6 +115,16 @@ func someMethod(gr: UIGestureRecognizer) {
 </code></pre><p>其实在Swift中可以把Selector省略，直接用字符串代替：</p>
 <pre><code> // Swift
  let doubTapGesture = UITapGestureRecognizer(target: self, action: &quot;someMethod&quot;)
+</code></pre><h2 id="quartzcore">QuartzCore</h2>
+<p>在Xcode6-beta2中，通过Swift编写CALayer相关代码的时候，比如说</p>
+<pre><code>func yRotation(angle: Float) -&gt; CATransform3D {
+  ......
+}
+</code></pre><p>这个时候会报错：</p>
+<pre><code>Use of module &#39;CATransform3D&#39; as a type
+</code></pre><p>而在Objc里面是没有这样的错误的。</p>
+<p>碰到这个错误，我们需要做得就是将<em>QuartzCore</em>模块加载进来。在文件的顶部加载它：</p>
+<pre><code>import QuartzCore
 </code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
@@ -138,6 +148,14 @@ func someMethod(gr: UIGestureRecognizer) {
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2014/06/14/0009_http初窥/" title="0009_HTTP初窥">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  0009_HTTP初窥</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/2014/06/07/0007_点击界面空白处使得键盘消失/"  title="0007_点击界面空白处使得键盘消失">
@@ -155,7 +173,7 @@ func someMethod(gr: UIGestureRecognizer) {
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#swift-"><span class="toc-number">1.</span> <span class="toc-text">Swift学习笔记</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#selector-selector"><span class="toc-number">1.1.</span> <span class="toc-text">Selector跟@selector</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#swift-"><span class="toc-number">1.</span> <span class="toc-text">Swift学习笔记</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#selector-selector"><span class="toc-number">1.1.</span> <span class="toc-text">Selector跟@selector</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#quartzcore"><span class="toc-number">1.2.</span> <span class="toc-text">QuartzCore</span></a></li></ol>
   </div>
 
 <div id="asidepart">
@@ -172,6 +190,8 @@ func someMethod(gr: UIGestureRecognizer) {
 			<li><a href="/tags/BDD/" title="BDD">BDD<sup>1</sup></a></li>
 		
 			<li><a href="/tags/CocoaPods/" title="CocoaPods">CocoaPods<sup>1</sup></a></li>
+		
+			<li><a href="/tags/HTTP/" title="HTTP">HTTP<sup>1</sup></a></li>
 		
 			<li><a href="/tags/JavaScript/" title="JavaScript">JavaScript<sup>1</sup></a></li>
 		

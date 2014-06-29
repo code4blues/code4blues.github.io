@@ -1,0 +1,661 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>0009_HTTP初窥 | Code4Blues</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="kg8gk">
+    
+    <meta name="description" content="什么是HTTP？
+我们在淘宝上看到的每一张图片，豆瓣上的每一份电影介绍等等，其中的数据都是通过HTTP协议来传输的。
+HTTP，超文本传输协议（Hypertext Transfer Protocol）,是我们生活中不可或缺的互联网的数据传输通信的基石，是一个应用层的传输协议。
+数据怎么传输？
+互联网">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="Code4Blues" title="Code4Blues"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Code4Blues">Code4Blues</a></h1>
+				<h2 class="blog-motto">Way back into code</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:code4blues.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/06/14/0009_http初窥/" title="0009_HTTP初窥" itemprop="url">0009_HTTP初窥</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://code4blues.github.io" title="kg8gk">kg8gk</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2014-06-14T10:43:44.000Z" itemprop="datePublished">6月 14 2014</time>
+    更新日期:<time datetime="2014-06-26T23:06:40.000Z" itemprop="dateModified">6月 27 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#-http-"><span class="toc-number">1.</span> <span class="toc-text">什么是HTTP？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">2.</span> <span class="toc-text">数据怎么传输？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">3.</span> <span class="toc-text">资源</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#mime"><span class="toc-number">4.</span> <span class="toc-text">MIME</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#urx"><span class="toc-number">5.</span> <span class="toc-text">URx</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#url"><span class="toc-number">5.1.</span> <span class="toc-text">URL</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#scheme"><span class="toc-number">5.1.1.</span> <span class="toc-text">scheme</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#user-password"><span class="toc-number">5.1.2.</span> <span class="toc-text">user &amp;&amp; password</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#host"><span class="toc-number">5.1.3.</span> <span class="toc-text">host</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#port"><span class="toc-number">5.1.4.</span> <span class="toc-text">port</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#path"><span class="toc-number">5.1.5.</span> <span class="toc-text">path</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#params"><span class="toc-number">5.1.6.</span> <span class="toc-text">params</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#query"><span class="toc-number">5.1.7.</span> <span class="toc-text">query</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fragment"><span class="toc-number">5.1.8.</span> <span class="toc-text">fragment</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#-url"><span class="toc-number">5.2.</span> <span class="toc-text">相对URL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#url-"><span class="toc-number">5.3.</span> <span class="toc-text">URL编码</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#http-http-message-"><span class="toc-number">6.</span> <span class="toc-text">HTTP报文（HTTP Message）</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">6.1.</span> <span class="toc-text">起始行</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#-"><span class="toc-number">6.1.1.</span> <span class="toc-text">请求行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#-"><span class="toc-number">6.1.2.</span> <span class="toc-text">响应行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#-method-"><span class="toc-number">6.1.3.</span> <span class="toc-text">方法（method）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#-"><span class="toc-number">6.1.4.</span> <span class="toc-text">状态码与原因短语</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">6.2.</span> <span class="toc-text">报文头</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#-"><span class="toc-number">6.2.1.</span> <span class="toc-text">通用字段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#-"><span class="toc-number">6.2.2.</span> <span class="toc-text">请求字段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#-"><span class="toc-number">6.2.3.</span> <span class="toc-text">响应字段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#-"><span class="toc-number">6.2.4.</span> <span class="toc-text">报文体字段</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">6.3.</span> <span class="toc-text">报文体</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">7.</span> <span class="toc-text">结束语</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">8.</span> <span class="toc-text">参考资料</span></a></li></ol>
+		</div>
+		
+		<p><img src="/img/0009/01_HTTP_title.jpg" alt="HTTP初窥" title="HTTP初窥"></p>
+<h1 id="-http-">什么是HTTP？</h1>
+<p>我们在淘宝上看到的每一张图片，豆瓣上的每一份电影介绍等等，其中的数据都是通过<em>HTTP</em>协议来传输的。</p>
+<p><strong>HTTP</strong>，<em>超文本传输协议</em>（<em>Hypertext Transfer Protocol</em>）,是我们生活中不可或缺的互联网的数据传输通信的基石，是一个应用层的传输协议。</p>
+<h1 id="-">数据怎么传输？</h1>
+<p>互联网上的内容都是存放在服务器上的，而我们通过客户端来获取这些内容。</p>
+<p>常见的客户端包括了我们电脑上常见的各类浏览器，IE，Chrome，Firefox等等，还有各种需要从网络上获取数据的App，像淘宝手机客户端，以及其他的一些。</p>
+<p><img src="/img/0009/02_browsers.jpg" alt="浏览器妹子们" title="浏览器妹子们"></p>
+<p>简单来说，如果一个客户端要获取位于服务器上的数据，它会发出一条HTTP请求给服务器，服务器根据请求获取数据后，会给客户端发回一条HTTP响应。</p>
+<p>举个例子，如果我们要在豆瓣上查看《软件开发者路线》这本书，那么我们需要打开浏览器，在地址栏中输入地址：<a href="http://book.douban.com/subject/4924164/" target="_blank">http://book.douban.com/subject/4924164/</a> （这地址被称作是<strong>URL</strong>）。点击回车之后，浏览器会发出一条HTTP请求给豆瓣网。豆瓣在获取了书籍相关资源（比如书籍封面，书评等等）之后，再以响应的形式发回给浏览器。浏览器在收到响应之后，根据响应中的相关信息将页面展示出来。</p>
+<p><img src="/img/0009/03_request_response.png" alt="HTTP请求/响应头信息" title="HTTP请求/响应header信息"></p>
+<p>上面的截图里面包含有请求以及响应报文头的信息，其中的某些内容后面会逐一展开。</p>
+<p>现在我们知道要浏览器会发送请求，会接收响应，那么稍微底层一点的情况如何呢？请求是怎么发送出去的？HTTP通过<strong>TCP/IP</strong>来解决这个问题。</p>
+<p><img src="/img/0009/04_internals.png" alt="HTTP底层链接" title="HTTP底层链接"></p>
+<ol>
+<li>首先，客户端会根据URL提供的地址，跟服务器建立起一条TCP链接。</li>
+<li>TCP链接建立起来之后，客户端会向服务器发送请求，内容同上面的截图类似。</li>
+<li>服务器收到了请求之后，会使用同一条TCP链接返回相应的响应报文。上面的截图中包含了响应的报文头信息，报文具体内容就是整个页面。</li>
+<li>客户端在接收到响应信息之后，可以使用同一条TCP链接发出其他的请求，也可以直接关掉它。</li>
+</ol>
+<p>上面的四个步骤，就是一次客户端与服务器的热切而友好的简单交流过程。</p>
+<p>我们可以使用命令行工具<strong>telnet</strong>来尝试整个过程：</p>
+<p><img src="/img/0009/05_telnet.png" alt="使用Telnet进行HTTP通信" title="使用Telnet来进行HTTP通信"></p>
+<p>可以看到响应内容跟前面的截图是类似的。</p>
+<h1 id="-">资源</h1>
+<p>存放在服务器上的数据可以是静态的，像图片，音乐等等这些；也可以是动态的，比如代码生成的内容，像Google的搜索结果。对于前面的例子，像《软件开发者线路图》的书籍封面，这是静态数据。这本书的整个页面，因为里面的内容可能随时会变化，可能就是动态的。也有可能是静态的，可能豆瓣把利用数据生成了固定的页面，存放在了服务器上。</p>
+<p>一般这些数据被称作是资源（Resource）。</p>
+<h1 id="mime">MIME</h1>
+<p>这些资源各式各样，HTTP怎么对其加以区别呢？这就用到了<strong>MIME类型</strong>，也可以叫做媒体类型。</p>
+<p><strong>MIME</strong>，多用途因特网邮件拓展（Multipurpose Internet Mail Extension），原来是用在Email中的，具体作用我们就略过不看了，只要知道现在HTTP用它来描述网络上各种类型的内容。</p>
+<p>在前面关于HTTP请求/响应的图片里头，我们可以在第一行看到<em>MIME type</em>的值是<em>text/html</em>，这代表得是HTML页面。在后面的内容中，我们还可以看到其他一些类型。</p>
+<h1 id="urx">URx</h1>
+<p>我们要发出一个请求去获取服务器上的资源，就必须要知道要从哪里去获取它，这时候就会用到<strong>URI</strong>，统一资源标识符（Uniform Reousrce Identifier）。我们利用URI，在全球范围内唯一标识我们的数据。前面提到过的<strong>URL</strong>，统一资源定位符（Uniform Resource Locator），是URI的一种。另外一种是<strong>URN</strong>，统一资源名（Uniform Resource Name），尚处于试验阶段，不再赘述。</p>
+<p>这里我们主要讲讲URL。</p>
+<h2 id="url">URL</h2>
+<p>通用的URL一般由9个组件组成，如下图：</p>
+<p><img src="/img/0009/06_URL.png" alt="URL的组成" title="URL的组成"></p>
+<p>但是平时我们在使用的时候几乎没有可能用到全部的组件，其中最重要的便是<strong>scheme</strong>，<strong>host</strong>以及<strong>path</strong>了。下面对这9个组件依次简述。</p>
+<h3 id="scheme">scheme</h3>
+<p>scheme，方案，也可能称作是协议，protocol。这个组件定义了客户端在与服务器进行通信的使用，用得是哪个应用层协议。常见的有下面几种：</p>
+<ul>
+<li>http，这是最常见的一种，无处不在。</li>
+<li>https，<em>Hypertext Transfer Protocol Secure</em> ，加密协议，一般用于敏感信息传输，登陆网银，淘宝这些时会看到它</li>
+<li>ftp，<em>File Transfer Protocol</em> ，我们在与FTP文件服务器通信的时候会用到它</li>
+<li>file，在浏览中访问本地文件会用到该协议</li>
+</ul>
+<p><img src="/img/0009/07_HTTPS.png" alt="HTTPS" title="HTTPS"></p>
+<p>它以一个字母开始，由第一个英文冒号(:)将其与URL的其他部分隔开，且大小写无关。</p>
+<h3 id="user-password">user &amp;&amp; password</h3>
+<p>我长这么大，除了在书上，其它时候就没见过这两个组件出现在浏览器地址栏里。</p>
+<p>用户名跟密码使用<em>英文冒号</em>隔开，与主机名之间用<em>@</em>符号隔开。我们看一张书里头的示例：</p>
+<p><img src="/img/0009/08_user_password.png" alt="用户名跟密码" title="用户名跟密码"></p>
+<h3 id="host">host</h3>
+<p>host组件标识了在互联网上提供内容，资源的服务器，我们可以使用域名，或者IP地址了来表示这台主机：</p>
+<ul>
+<li><a href="http://www.douban.com" target="_blank">http://www.douban.com</a></li>
+<li><a href="http://211.147.4.31" target="_blank">http://211.147.4.31</a></li>
+</ul>
+<p>这两个地址原则上是等效的，但是通过IP地址是没有办法访问豆瓣的，具体做了什么处理我也不清楚。</p>
+<p>如果使用百度的IP地址来访问，是没有问题的：</p>
+<ul>
+<li><a href="http://www.baidu.com" target="_blank">http://www.baidu.com</a></li>
+<li><a href="http://115.239.210.27" target="_blank">http://115.239.210.27</a></li>
+</ul>
+<p>要怎么通过域名来对应到具体的IP，这个就是<strong>DNS</strong>，域名服务器（Domain Name Server）的功劳了，暂时不详细说明。</p>
+<h3 id="port">port</h3>
+<p>port，端口组件标识了服务器监听的网络端口，</p>
+<ul>
+<li>HTTP，默认使用了80端口。</li>
+<li>HTTPS，则是使用的443端口。</li>
+<li>FTP，用得是20跟21端口。</li>
+</ul>
+<h3 id="path">path</h3>
+<p>该组件指出了资源位于服务器上的具体位置，通过<strong>/</strong>字符将路径划分成一些片段，像：</p>
+<ul>
+<li><a href="http://book.douban.com/subject/1148282/" target="_blank">http://book.douban.com/subject/1148282/</a></li>
+</ul>
+<p>这个地址中的路径就是</p>
+<ul>
+<li>/subject/1148282</li>
+</ul>
+<h3 id="params">params</h3>
+<p>参数这个组件也是非常少见的，略过..</p>
+<h3 id="query">query</h3>
+<p>查询字符串，query，出现在URL末尾的问号（?）后面，格式是<em>key=value</em>，多个查询字符串可以用按位与（&amp;）符号隔开。它可以用来缩小我们所请求资源的范围。下面是示例：</p>
+<ul>
+<li><a href="http://www.example.com/books/internet.action?name=Rework" target="_blank">http://www.example.com/books/internet.action?name=Rework</a></li>
+</ul>
+<p>上面的示例定位了internet类别里面书名为Rework的书。</p>
+<h3 id="fragment">fragment</h3>
+<p>片段组件用于在资源内部进行跳转，像是在一篇文章中跳到某个章节。它位于URL的尾部，前面跟着井字符（#）。示例如下：</p>
+<ul>
+<li><a href="http://www.example.com/books/contents.html#CSAPP" target="_blank">http://www.example.com/books/contents.html#CSAPP</a></li>
+</ul>
+<p>这个例子里面，片段CSAPP引用了contents.html页面中名为<em>CSAPP</em>的一部分。</p>
+<h2 id="-url">相对URL</h2>
+<p>我们在前面所见到过得URL基本都是<em>绝对URL（Absolute URL）</em>，绝对路径里面包括了scheme组件，host组件或者port组件，以及详细的路径组件。我们可以直接通过绝对URL来访问一个资源。</p>
+<p>而<em>相对URL（Relative URL）</em>，只有路径组件，是不能直接访问到其对应的资源的，必须还有一个<strong>基础URL（Base URL）</strong>帮助其定位资源。这个基础URL一般是相对URL所在页面本身的URL，就像我们平时说的相对路径以及绝对路径一样。</p>
+<p>通过相对URL，不仅在编写页面的时候可以少敲些键盘，而且在迁移数据的时候，可以为链接有效性提供一定的保证。</p>
+<h2 id="url-">URL编码</h2>
+<p>在前面的内容中，我们可以知道URL里会出现许多各种各样的字符，比如<em>#</em>，比如<em>?</em>，再比如<em>@</em>，它们是URL的一部分，自有特殊的用处，就跟编程语言里面的保留标识符一样。</p>
+<p>除此之外，因为URL是通用的，全球各地还有使用各种语言文字的人在使用URL，在某些电脑上是无法显示这些文字的。如果这些要用到URL上，该怎么办？</p>
+<p>当然还有一些其他的例子，这里就不细说了。</p>
+<p>为了实现URL的通用性，在碰到特殊字符的时候，我们会需要对其编码，对字符进行转义。如果不进行编码，在某些时候是会出现奇怪问题的。</p>
+<p>URL中这种编码方法被称为是<strong><a href="http://en.wikipedia.org/wiki/Percent_encoding" target="_blank">Percent Encoding</a></strong>，包含一个百分号（%），以及两个十六进制数。根据维基百科里面的内容，最新的编码方法如下：</p>
+<blockquote>
+<p>2005年1月发布的RFC 3986，强制所有新的URI必须对未保留字符不加以百分号编码；其它字符要先转换为UTF-8字节序列, 然后对其字节值使用百分号编码。此前的URI不受此标准的影响。</p>
+</blockquote>
+<p>具体有哪些特殊字符，我们看一张截图：</p>
+<p><img src="/img/0009/09_special_characters.png" alt="URL中的保留以及受限字符" title="URL中的保留以及受限字符"></p>
+<p>说到这些字符，就不得不提到在JavaScript中的两对函数：</p>
+<ol>
+<li><strong>encodeURI/decodeURI</strong></li>
+<li><strong>encodeURIComponents/decodeURIComponents</strong></li>
+</ol>
+<p>第一组函数用于对整个URL进行编解码。就编码的encodeURI函数而已，因为是对处理整个URL，所以不会对上面截图中对URL来说有特殊意义的字符，以及一些特殊的字符进行编码：</p>
+<ul>
+<li>; / ? : @ &amp; = + $ , #</li>
+<li>_ - . ! ~ * &#39; ( )</li>
+</ul>
+<p>所以在使用第一组函数得时候需要注意，URL的任意组件中都不能包含第一类特殊字符，不然编码后的URL会跟预想中的不一样，导致解码时产生问题出现。至于第二类特殊字符，编解码都不会影响它，所以大概是没有关系的。</p>
+<p>而遇到URL中带有这些特殊字符的时候，就需要用到第二组函数了。</p>
+<p>与第一组函数类似的时，它也不会处理第二类特殊字符。不同的是，对于第一类特殊字符，encodeURIComponent会毫不犹豫的处理掉。如果传了一整个URL给它，那就要小心了。</p>
+<p>在使用的时候，应该是将URL的组件逐个传给这一组函数进行编解码，不然也会出现预料之外的情况。我们可以看看一个例子：</p>
+<p><img src="/img/0009/10_encodeURIx_examples.png" alt="encodeURIx示例" title="encodeURIx示例"></p>
+<h1 id="http-http-message-">HTTP报文（HTTP Message）</h1>
+<p>客户端发出的HTTP请求，以及服务器发出的HTTP响应，其实就是发送得HTTP报文。这些报文中不仅包括了数据，还包括了描述这些数据的数据，即元数据（meta data）。前面的截图里面包含了HTTP报文的元数据部分，也叫做报文头。</p>
+<p>HTTP请求报文跟响应报文的基本结构基本相同，可以粗略的被分为三个部分：</p>
+<ol>
+<li>起始行，表明了是请求还是响应</li>
+<li>报文头，描述了整个报文的情况</li>
+<li>报文体，该部分可选，是HTTP传输的内容</li>
+</ol>
+<p>其中起始行跟报文头隔着一个CRLF，而报文头跟报文体之间除了隔着一个CRLF外，还另外多了一个空白行，就像下面这样：</p>
+<pre><code>起始行
+报文头
+
+报文体
+</code></pre><h2 id="-">起始行</h2>
+<h3 id="-">请求行</h3>
+<p>HTTP请求报文的起始行即为请求行，分为三个部分，中间由空格符隔开，其格式如下：</p>
+<pre><code>&lt;method&gt; &lt;requestURL&gt; &lt;version&gt;
+</code></pre><p>其中<em>method</em>表示客户端希望服务器对我们所请求的资源执行的动作，是获取，修改还是删除之类，稍后有详细介绍。</p>
+<p><em>requestURL</em>就是我们前面所介绍的URL了，注意要是绝对URL。</p>
+<p><em>version</em>表示HTTP报文所使用的HTTP版本，就目前而言，都是<em>HTTP/1.1</em>。</p>
+<h3 id="-">响应行</h3>
+<p>相应地，响应行是HTTP响应报文的起始行，也被空格符分成了三个部分：</p>
+<pre><code>&lt;version&gt; &lt;statusCode&gt; &lt;reasonPhase&gt;
+</code></pre><p><em>version</em>跟请求行中的一样，目前绝大多数也是<em>HTTP/1.1</em>。</p>
+<p><em>statusCode</em>是个三位的数字，表示响应的状态，描述了请求是否处理成功，后面也会详细说明。</p>
+<p>而<em>reasonPhase</em>则是跟状态码一一对应的文本信息，该信息只用用来给人理解响应状态码的意义的。</p>
+<h3 id="-method-">方法（method）</h3>
+<p>可以从前面的截图中看到，目前我们碰到的方法都是<em>GET</em>类型的，该方法专门用来告知服务器，“我要一份资源”。以下列举几个常见的方法：</p>
+<ul>
+<li><strong>GET</strong>，该方法从服务器获取一份资源，不包含请求体</li>
+<li><strong>HEAD</strong>，该方法获取资源的元数据，即响应报文头信息，不包含请求体</li>
+<li><strong>POST</strong>，在服务器上创建一个资源</li>
+<li><strong>PUT</strong>，可以在服务器上创建一个资源，也可以修改资源，更新全部内容</li>
+<li><strong>PATCH</strong>，该方法用来修改服务器上的资源，更新部分内容</li>
+<li><strong>DELETE</strong>，删除服务器上的资源</li>
+<li><strong>OPTIONS</strong>，获取服务器上可以执行的方法</li>
+</ul>
+<p>这些方法里面，有四个方法应该是幂等（Idempotence）的：</p>
+<ol>
+<li>GET</li>
+<li>HEAD</li>
+<li>DELETE</li>
+<li>OPTIONS</li>
+</ol>
+<p>什么是幂等？即一次或者多次用这些方法请求同一个资源，副作用应该是一样的。在数学里头，常数函数以及恒等函数便是幂等的。具体有关幂等的内容，可以点击查看酷壳上的一篇文章，<a href="http://coolshell.cn/articles/4787.html" target="_blank">HTTP幂等性概念和应用</a>。</p>
+<p>下面看一些例子，网址来自于<a href="http://developers.douban.com/wiki/?title=api_v2" target="_blank">豆瓣API</a>以及<a href="https://developers.google.com/drive/v2/reference/files" target="_blank">Google Drive SDK</a>：</p>
+<ul>
+<li><p>获取ID为6526452的书籍信息：</p>
+<pre><code>  GET  https://api.douban.com/v2/book/6526452
+</code></pre></li>
+<li><p>对某本书发表新评论：</p>
+<pre><code>  POST  https://api.douban.com/v2/book/reviews
+</code></pre></li>
+<li><p>修改某个评论：</p>
+<pre><code>  PUT  https://api.douban.com/v2/book/review/6457190
+</code></pre></li>
+<li><p>删除某个评论：</p>
+<pre><code>  DELETE  https://api.douban.com/v2/book/review/4926318
+</code></pre></li>
+<li><p>更新文件元数据</p>
+<pre><code>  PATCH https://www.googleapis.com/drive/v2/files/fileId
+</code></pre></li>
+</ul>
+<h3 id="-">状态码与原因短语</h3>
+<p>前面的方法是客户端用来告知服务器要做什么事情，而状态码（status code）则是服务器告诉客户端，你要我做得事情做得怎么样了。</p>
+<p>原因短语（reason phase）跟状态码成对出现，用于提供一些人类可认知的文本信息，是状态码的可读版本。HTTP规范中虽然没有对其进行硬性规定，但是每个状态码都有其常用的原因短语，稍后会见到一些。</p>
+<p>下面是一个尤为有名的状态码：</p>
+<p><img src="/img/0009/11_404.gif" alt="404 Not Found" title="404 Not Found"></p>
+<p>HTTP的状态码目前分为5块，从100开始，截止到599，但其实已经定义的状态码并没有那么多：</p>
+<ul>
+<li>100~199，表示信息提示，比如在切换WebSocket协议的时候，会返回101，表示协议正在切换</li>
+<li>200~299，表示请求成功，像请求资源成功一般会返回200</li>
+<li>300~399，表示资源位置被移动了，需要进行重定向</li>
+<li>400~499，这一类错误码表示客户端发送了一些服务器没有办法处理的请求，比如找不到的资源</li>
+<li>500~599，这一类错误码表示客户端虽然发送了有效的请求，但是服务器在处理请求时出错了。</li>
+</ul>
+<p>一般来说，如果我们获取的状态码没有具体的定义其含义，那么可以认为这个状态码的意思就是它所在大类的意思。</p>
+<p>举个例子，假如某位开发者突然奇想地返回了状态码<em>222</em>，但是目前的定义中并没有指定该状态码的具体含义，那么我们可以认为它代表得就是请求成功。</p>
+<p>接下来看一些常用的状态码：</p>
+<ul>
+<li><strong>200</strong>，OK，表示请求成功</li>
+<li><strong>301</strong>，Move Permanently，表示请求的资源被移动位置了</li>
+<li><strong>304</strong>，Not Modified，表示请求的资源未被修改，一般请求缓存了的资源会返回这个状态码</li>
+<li><strong>400</strong>，Bad Request，客户端发送的请求有误</li>
+<li><strong>401</strong>，Unauthorized，获取资源前需要先授权</li>
+<li><strong>403</strong>，Forbidden，请求被服务器拒绝了</li>
+<li><strong>404</strong>，Not Found，服务器找不到请求的资源</li>
+<li><strong>500</strong>，Internal Server Error，服务器内部出错了</li>
+<li><strong>501</strong>，Not Implemented，请求超出了服务器的能力范围</li>
+</ul>
+<p>其他的状态码跟原因短语这里就不再赘述，大家可以点击<a href="http://en.wikipedia.org/wiki/List_of_HTTP_status_codes" target="_blank">这里</a>查看更为详尽的HTTP状态码信息。</p>
+<p>最后再看一个挺有意义的404页面，来自<a href="http://coolshell.cn" target="_blank">酷壳</a>：</p>
+<p><img src="/img/0009/12_404_2.png" alt="个性化404页面" title="个性化404页面"></p>
+<h2 id="-">报文头</h2>
+<p>前面提到过报文头中包含的信息描述了整个报文的一些情况，即元数据或者元信息。那它是怎么提供这些信息的呢？</p>
+<p>利用成对的键值的报文头字段，名字后面跟着冒号(:)，再跟上可选的空格，接着跟上字段值，最后来一个CRLF换行结束，<strong>key: value</strong>：</p>
+<pre><code>Content-Type: text/html
+</code></pre><p>如果值太长，那么可以将其分为多行，不过多出来的行前面需要至少加上一个空格或者Tab：</p>
+<pre><code>Custom-Header: Too long
+  to be contained
+  in one line
+</code></pre><p>这些字段大概可以分为5类：</p>
+<ol>
+<li>通用字段，可以同时出现在请求报文跟响应报文中</li>
+<li>请求字段，主要提供有关请求的信息</li>
+<li>响应字段，提供更多有关响应的信息</li>
+<li>报文体字段，描述了报文体的情况，比如数据长度，再比如类型</li>
+<li>自定义字段，并非HTTP本身定义的字段，由服务提供商自行定义</li>
+</ol>
+<p>接下来会列举一些前面四类中的常见字段，自定义字段由于各厂商定义不一，这里就不举例子了。更为详细的报文头字段信息，请查看<em>RFC2616</em>的<a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14" target="_blank">Header Field Definitions</a>部分。</p>
+<h3 id="-">通用字段</h3>
+<ul>
+<li><p>Connection：该字段允许客户端和服务器指定跟请求/响应链接有关的选项</p>
+<pre><code>  Connection: keep-alive
+</code></pre></li>
+<li><p>Date：提供报文创建的时间以及日期</p>
+<pre><code>  Date: Tue, 24 Jun 2014 22:45:47 GMT
+</code></pre></li>
+<li><p>Cache-Control：随报文传输的缓存指示</p>
+<pre><code>  Cache-Control: no-cache
+  Cache-Control: must-revalidate, no-cache, private
+</code></pre></li>
+<li><p>Pragma：另外一个随报文传输指示的方式，常用于缓存，但不限于缓存</p>
+<pre><code>  Pragma: no-cache
+</code></pre></li>
+</ul>
+<h3 id="-">请求字段</h3>
+<ul>
+<li><p>Host：给出了接受请求的服务器的主机名，有可能带上端口号：</p>
+<pre><code>  Host: read.douban.com
+</code></pre></li>
+</ul>
+<ul>
+<li><p>Referer：指出了当前页面是从什么页面跳转而来</p>
+<pre><code>  Referer:http://book.douban.com/subject/1788077/
+</code></pre></li>
+<li><p>User-Agent：指出了发起请求的客户端名称类型</p>
+<pre><code>  User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 
+</code></pre></li>
+<li><p>Accept：告知服务器，客户端能够接收那些媒体类型</p>
+<pre><code>  Accept:image/webp,*/*;q=0.8
+</code></pre></li>
+<li><p>Accept-Encoding：告知服务器，客户端可以接收哪些编码方式</p>
+<pre><code>  Accept-Encoding:gzip,deflate,sdch
+</code></pre></li>
+<li><p>Accept-Language：告知服务器，客户端可以接收哪些语言</p>
+<pre><code>  Accept-Language:en-US,en;q=0.8,zh-CN;q=0.6
+</code></pre></li>
+</ul>
+<h3 id="-">响应字段</h3>
+<ul>
+<li><p>Age：从最初创建开始的响应持续时间</p>
+<pre><code>  Age:1
+</code></pre></li>
+<li><p>Server：服务器应用程序的名称以及版本</p>
+<pre><code>  Server:nginx
+</code></pre></li>
+</ul>
+<h3 id="-">报文体字段</h3>
+<ul>
+<li><p>Content-Length：报文体数据的长度</p>
+<pre><code>  Content-Length:56727
+</code></pre></li>
+<li><p>Content-Type：该响应的数据类型</p>
+<pre><code>  Content-Type:application/x-javascript
+</code></pre></li>
+<li><p>Expires：该数据不再有效的时间，过了这个时间之后数据需要重新获取</p>
+<pre><code>  Expires:Fri, 19 Dec 2014 02:48:01 GMT
+</code></pre></li>
+</ul>
+<h2 id="-">报文体</h2>
+<p>前面提到过，报文体跟报文头中间相隔着一个空行，这一点至关重要。如果没有这个空行，整个报文就很难被识别正确。</p>
+<p>在空白行之后的报文体，其内容可以是文本，可以是图像也是可以是其他的一些。内容的大小可以在<em>Content-Length</em>报文头字段上反映出来。如果内容被编码了，那么它就是编码后的内容大小。</p>
+<p>有一种情况下，<em>Content-Length</em>字段可以省略，分块编码。就是把报文内容划分成若干个大小已知的分块进行传输。</p>
+<p>这里值得一提是在填写HTTP表格，或者上传文件时会用到的多部分（multipart）内容传输。</p>
+<p>在multipart报文中包含了多个报文作为一个单独的报文发送，这些被合并的报文可以有其独自的内容，之间用分隔字符串相连。</p>
+<p>MIME类型有两种这样的multipart内容：</p>
+<ol>
+<li>multipart/form-data</li>
+<li>multipart/mixed</li>
+</ol>
+<p>我们在<em>Content-Type</em>字段中声明其MIME类型，并利用<em>boundary</em>引出其分隔字符串：</p>
+<pre><code>Content-Type: multipart/form-data; boundary=[hello^_^world]
+</code></pre><p>假设我们有一个表格，其中包含一个文本框，内容为&quot;hello world&quot;，并且还上传了一个文本文件example.txt以及一张图片football.png，那么浏览器可能发出以下内容：</p>
+<pre><code>Content-Type: multipart/form-data; boundary=AE86
+--AE86
+Content-Disposition: form-data; name=&quot;text-input-name&quot;
+hello world
+--AE86
+Content-Disposition: form-data; name=&quot;file-input-name&quot;
+Content-Type: multipart/mixed; boundary=GoogleIO
+--GoogleIO
+Content-Disposition: file; filename=&quot;example.txt&quot;
+Content-Type: text/plain
+... 这里是example.txt的内容 ...
+--GoogleIO
+Content-Disposition: file; filename=&quot;football.png&quot;
+Content-Type: image/png
+... 这里是football.png的内容 ...
+--GoogleIO--
+--AE86--
+</code></pre><p>值得注意的一点是，对于报文体开头部分的分隔字符串以及中间部分的分隔字符串，它们带有两根短划线作为前缀，<strong>--</strong>；而对于作为结束的分隔字段串，不仅有两根短划线作为前缀，其后缀也是两根同样的短划线：</p>
+<pre><code>--起始分隔字符串
+--结束分隔字符串--
+</code></pre><h1 id="-">结束语</h1>
+<p>这一篇HTTP初窥的内容就到此为止了，只是整个HTTP协议中的沧海一粟，值得大家去探索学习的东西还有很多很多，可以参照参考资料中的<strong>HTTP:The Definitive Guide</strong>以及<strong>RFC2616</strong>继续进行学习。</p>
+<h1 id="-">参考资料</h1>
+<ol>
+<li>标题大图 <a href="http://1.bp.blogspot.com/-QfdLSme1wf4/TaU4KIir8VI/AAAAAAAAAHc/grKs8tVZT48/s1600/url.jpg" target="_blank">http://1.bp.blogspot.com/-QfdLSme1wf4/TaU4KIir8VI/AAAAAAAAAHc/grKs8tVZT48/s1600/url.jpg</a></li>
+<li>浏览器妹子们 <a href="http://zh.moegirl.org/File:1334507202805.jpg" target="_blank">http://zh.moegirl.org/File:1334507202805.jpg</a></li>
+<li>HTTP的维基百科 <a href="http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol" target="_blank">http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol</a></li>
+<li>HTTP:The Definitive Guide <a href="http://book.douban.com/subject/1440226/" target="_blank">http://book.douban.com/subject/1440226/</a></li>
+<li>Professional iOS Network Programming <a href="http://book.douban.com/subject/12890695/" target="_blank">http://book.douban.com/subject/12890695/</a></li>
+<li>Percent Encoding <a href="http://en.wikipedia.org/wiki/Percent_encoding" target="_blank">http://en.wikipedia.org/wiki/Percent_encoding</a></li>
+<li>JavaScript:The Definitive Guide(6th) <a href="http://book.douban.com/subject/5303032/" target="_blank">http://book.douban.com/subject/5303032/</a></li>
+<li>RFC2616 <a href="http://www.w3.org/Protocols/rfc2616/rfc2616.html" target="_blank">http://www.w3.org/Protocols/rfc2616/rfc2616.html</a></li>
+</ol>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/HTTP/">HTTP</a>
+  </div>
+
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://code4blues.github.io/2014/06/14/0009_http初窥/" data-title="0009_HTTP初窥 | Code4Blues" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2014/06/08/0008_swift学习笔记/"  title="0008_Swift学习笔记">
+ <strong>NEXT:</strong><br/> 
+ <span>0008_Swift学习笔记
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#-http-"><span class="toc-number">1.</span> <span class="toc-text">什么是HTTP？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">2.</span> <span class="toc-text">数据怎么传输？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">3.</span> <span class="toc-text">资源</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#mime"><span class="toc-number">4.</span> <span class="toc-text">MIME</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#urx"><span class="toc-number">5.</span> <span class="toc-text">URx</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#url"><span class="toc-number">5.1.</span> <span class="toc-text">URL</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#scheme"><span class="toc-number">5.1.1.</span> <span class="toc-text">scheme</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#user-password"><span class="toc-number">5.1.2.</span> <span class="toc-text">user &amp;&amp; password</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#host"><span class="toc-number">5.1.3.</span> <span class="toc-text">host</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#port"><span class="toc-number">5.1.4.</span> <span class="toc-text">port</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#path"><span class="toc-number">5.1.5.</span> <span class="toc-text">path</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#params"><span class="toc-number">5.1.6.</span> <span class="toc-text">params</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#query"><span class="toc-number">5.1.7.</span> <span class="toc-text">query</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fragment"><span class="toc-number">5.1.8.</span> <span class="toc-text">fragment</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#-url"><span class="toc-number">5.2.</span> <span class="toc-text">相对URL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#url-"><span class="toc-number">5.3.</span> <span class="toc-text">URL编码</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#http-http-message-"><span class="toc-number">6.</span> <span class="toc-text">HTTP报文（HTTP Message）</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">6.1.</span> <span class="toc-text">起始行</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#-"><span class="toc-number">6.1.1.</span> <span class="toc-text">请求行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#-"><span class="toc-number">6.1.2.</span> <span class="toc-text">响应行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#-method-"><span class="toc-number">6.1.3.</span> <span class="toc-text">方法（method）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#-"><span class="toc-number">6.1.4.</span> <span class="toc-text">状态码与原因短语</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">6.2.</span> <span class="toc-text">报文头</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#-"><span class="toc-number">6.2.1.</span> <span class="toc-text">通用字段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#-"><span class="toc-number">6.2.2.</span> <span class="toc-text">请求字段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#-"><span class="toc-number">6.2.3.</span> <span class="toc-text">响应字段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#-"><span class="toc-number">6.2.4.</span> <span class="toc-text">报文体字段</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">6.3.</span> <span class="toc-text">报文体</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">7.</span> <span class="toc-text">结束语</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">8.</span> <span class="toc-text">参考资料</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/BDD/" title="BDD">BDD<sup>1</sup></a></li>
+		
+			<li><a href="/tags/CocoaPods/" title="CocoaPods">CocoaPods<sup>1</sup></a></li>
+		
+			<li><a href="/tags/HTTP/" title="HTTP">HTTP<sup>1</sup></a></li>
+		
+			<li><a href="/tags/JavaScript/" title="JavaScript">JavaScript<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Karma/" title="Karma">Karma<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Kiwi/" title="Kiwi">Kiwi<sup>1</sup></a></li>
+		
+			<li><a href="/tags/RequireJS/" title="RequireJS">RequireJS<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Swift/" title="Swift">Swift<sup>1</sup></a></li>
+		
+			<li><a href="/tags/UI/" title="UI">UI<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Xcode/" title="Xcode">Xcode<sup>1</sup></a></li>
+		
+			<li><a href="/tags/iOS/" title="iOS">iOS<sup>7</sup></a></li>
+		
+			<li><a href="/tags/设计/" title="设计">设计<sup>1</sup></a></li>
+		
+			<li><a href="/tags/读书笔记/" title="读书笔记">读书笔记<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2014 
+		
+		<a href="http://code4blues.github.io" target="_blank" title="kg8gk">kg8gk</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>
