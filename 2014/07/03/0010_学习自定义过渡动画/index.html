@@ -1,0 +1,461 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>0010_学习自定义过渡动画 | Code4Blues</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="mrahmiao">
+    
+    <meta name="description" content="这里的自定义过渡动画指得是View Controller之间的过渡动画。过渡动画大致包括View Controller的显示（presentation）与消失（dismissal），UINavigationController的push与pop，UICollectionViewLayout之间的转换">
+    
+    
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="mrahmiao" />
+    <meta name="twitter:title" content="0010_学习自定义过渡动画 | Code4Blues" />
+      
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="Code4Blues" title="Code4Blues"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Code4Blues">Code4Blues</a></h1>
+				<h2 class="blog-motto">Way back into code</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:code4blues.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/07/03/0010_学习自定义过渡动画/" title="0010_学习自定义过渡动画" itemprop="url">0010_学习自定义过渡动画</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://code4blues.github.io" title="mrahmiao">mrahmiao</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2014-07-02T23:01:17.000Z" itemprop="datePublished">7月 3 2014</time>
+    更新日期:<time datetime="2014-07-13T14:09:26.000Z" itemprop="dateModified">7月 13 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">1.</span> <span class="toc-text">固定时长的过渡动画</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#transitioningdelegate"><span class="toc-number">1.1.</span> <span class="toc-text">transitioningDelegate</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#animator-"><span class="toc-number">1.2.</span> <span class="toc-text">animator对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">1.3.</span> <span class="toc-text">实践</span></a></li></ol>
+		</div>
+		
+		<p>这里的自定义过渡动画指得是View Controller之间的过渡动画。过渡动画大致包括View Controller的显示（presentation）与消失（dismissal），UINavigationController的push与pop，UICollectionViewLayout之间的转换，UITabBarController切换Tab时的过渡（这个一般看不着）等等。后面会把从一个视图切入到另一个视图的过渡叫做<em>入场过渡</em>（presentation/push），然后该视图再切回原视图称为<em>出场过渡</em>（dismissal/pop）。</p>
+<p>而自定义过渡动画分为两种：</p>
+<ol>
+<li>固定时长的过渡动画，Fixed-length transition</li>
+<li>交互式的过渡动画，Interactive transition</li>
+</ol>
+<p>后者是在前者的基础上增加了手势控制进度的部分，后面会详细说明。</p>
+<p>跟着两类过渡动画密切相关的是<strong>UIViewControllerTransitioningDelegate</strong>这个协议。这个协议中声明了5个方法，其中4个有关过渡：</p>
+<ol>
+<li><code>animationControllerForPresentedController:presentingController:sourceController:</code></li>
+<li><code>animationControllerForDismissedController:</code></li>
+<li><code>interactionControllerForPresentation:</code></li>
+<li><code>interactionControllerForDismissal:</code></li>
+</ol>
+<p>前面两个方法负责返回控制动画运转的animator对象，后面两个方法则是返回控制交互的interactive animator对象。</p>
+<p>如果只是需要自定义过渡动画，那么实现前面2个方法即可。如果还要通过手势去控制过渡动画，那么需要实现全部4个方法。因为动画的实际运转是靠前面两个方法返回的animator对象来控制的，后面两个方法返回得interactive animator对象只控制过渡动画的交互。如果前面两个方法返回得是<em>nil</em>，或者干脆就没有定义，那么过渡动画就是系统默认的了。</p>
+<p>点击<a href="https://github.com/mrahmiao/starter-projects/custom-transitions" target="_blank">这里</a>下载教学工程.</p>
+<h1 id="-">固定时长的过渡动画</h1>
+<h2 id="transitioningdelegate">transitioningDelegate</h2>
+<p>对于普通的View Controller之间的过渡，所有的View Controller都自带了一个<strong>transitioningDelegate</strong>属性。对于将要<em>被展示</em>出来（presented）的View Controller（toVC），需要将遵循了<strong>UIViewControllerTransitioningDelegate</strong>协议的delegate对象赋值给它。</p>
+<p>这个delegate对象中，必须实现前面提到过的4个方法中的前两个方法方能支持自定义过渡动画：</p>
+<ol>
+<li><code>animationControllerForPresentedController:presentingController:sourceController:</code></li>
+<li><code>animationControllerForDismissedController:</code></li>
+</ol>
+<p>前者在提供了在View Controller出现时需要的animator，而后者则是提供在View Controller消失时所需的animator。</p>
+<p>一般在展示toVC的View Controller中设置toVC的transitioningDelegate。</p>
+<h2 id="animator-">animator对象</h2>
+<p>固定时长的过渡动画所需要的animator对象需要遵循<strong>UIViewControllerAnimatedTransitioning</strong>协议，这个协议中一共定义了三个方法：</p>
+<ol>
+<li><code>animateTransition</code></li>
+<li><code>transitionDuration:</code></li>
+<li><code>transitionEnded:</code></li>
+</ol>
+<p>其中前两个方法是每个animator对象都必须实现的，第一个方法控制过渡动画的具体呈现方式，第二个方法控制过渡动画的持续时间。第三个方法是可选的，过渡动画完成的时候会被调用。</p>
+<h2 id="-">实践</h2>
+<p>打开CustomTransitions-Starter工程，大概跟下图一样：</p>
+<p><img src="/img/0010/00-starter-project.png" alt="CustomTransitions-Starter"></p>
+<p>我们的第一个目标是在进入红色界面时，让其入场过渡像从高空坠落的皮球一样弹几下再停止。</p>
+<p><img src="/img/0010/01-gravity-collision-transition.gif" alt="Gravity and Collision Transition"></p>
+<p>新建一个swift文件，命名为<em>GravityCollisionAnimator</em>，使之继承于<em>NSObject</em>并遵循<em>UIViewControllerAnimatedTransitioning</em>协议：</p>
+<pre><code>// GravityCollisionAnimator.swift
+import UIKit
+
+class GravityCollisionAnimator: NSObject, UIViewControllerTransitioning {
+    // 实现代码
+}
+</code></pre><p>接着添加两个必要的方法：</p>
+<pre><code>func transitionDuration(transitionContext: UIViewControllerContextTransitioning!) -&gt; NSTimeInterval {
+  return 1.0
+}
+
+func animateTransition(transitionContext: UIViewControllerContextTransitioning!) {
+  // 这里是动画的实现代码
+}
+</code></pre><p>在<code>transitionDuration</code>方法中，我们使得整个过渡动画持续1秒。</p>
+<p>这两个方法的参数<code>transitionContext</code>都是<code>UIViewControllerContextTransitioning</code>，这个协议中提供了过渡的上下文内容，包括了fromViewController、toViewController，还有需要囊括过渡过程中所有出现的视图的containerView等等。通过这个参数，可以将fromViewController跟toViewController解耦，不用绑定在某两个特定的View Controller上。</p>
+<p>需要注意的是，我们既不需要将这个协议加到我们的自有类上，也不需要去实例化那些实现了这个协议的类。框架通过参数将它注入到我们的代码中，直接使用就行了。</p>
+<p>接下来我们给这个动画加上受到重力影响掉落，接着蹦几下然后才停止的效果。要实现这样的效果需要用到以下几个<em>UIDynamicBehavior</em>的子类：</p>
+<ul>
+<li>UIGravityBehavior，提供了重力效果</li>
+<li>UICollisionBehavior，提供了碰撞效果</li>
+<li>UIDynamicItemBehavior，提供了弹跳效果</li>
+</ul>
+<p><em>UIDynamicBehavior</em>以及其相关子类是iOS 7中新增的物理动画特性，具体这里不赘述，在Google上搜索其名称，可以找到不计其数的教程。我这里以后也可能有相关的学习笔记跟教程，敬请期待。</p>
+<p>除了上面提到的几个类，还有一个，<em>UIDynamicAnimator</em>，相当于提供上述物理效果的动画引擎，至关重要，具体看<code>animationTransition:</code>的实现：</p>
+<pre><code>func animateTransition(transitionContext: UIViewControllerContextTransitioning!) {
+
+  // 1. 准备过渡动画中必要的组件
+  let fromVC = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey)
+  let toVC = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey)
+  let toView = transitionContext.viewForKey(UITransitionContextToViewKey)
+  let finalFrame = transitionContext.finalFrameForViewController(toVC)
+  let screenBounds = UIScreen.mainScreen().bounds
+
+  // containerView是过渡中所有view的一个容器
+  let containerView = transitionContext.containerView()
+
+  /* 2. 在过渡动画中出现的view必须都在containerView中
+   *    这里将需要展示的view放到了屏幕的正上方
+   *    注意iOS设备坐标系的原点(0,0)位于屏幕的左上角，所以要乘以-1.0
+   *    同时在过渡的时候将背景设置为半透明
+   */
+  fromVC.view.alpha = 0.5
+  toView.frame = CGRectOffset(finalFrame, 0, -1.0 * CGRectGetHeight(screenBounds))
+  containerView.addSubview(toView)
+
+  // 3. 准备过渡动画中的物理动态效果
+  var animator: UIDynamicAnimator? = UIDynamicAnimator(referenceView: containerView)
+  let gravity = UIGravityBehavior(items: [toView])
+  gravity.magnitude = 10
+  let collision = UICollisionBehavior(items: [toView])
+  collision.addBoundaryWithIdentifier(&quot;GravityBoundary&quot;,
+    fromPoint: CGPoint(x: 0, y: screenBounds.height),
+    toPoint: CGPoint(x: screenBounds.width, y: screenBounds.height))
+  let animatorItem = UIDynamicItemBehavior(items: [toView])
+  animatorItem.elasticity = 0.5
+
+  animator!.addBehavior(gravity)
+  animator!.addBehavior(collision)
+  animator!.addBehavior(animatorItem)
+
+  // 4. 因为没有completionHandler，
+  //    所以需要手动在设定的过渡动画持续时间之后通知系统过渡动画已经完成
+  //    恢复背景的透明度
+  let nanoSeconds = UInt64(transitionDuration(transitionContext)) * NSEC_PER_SEC
+  let delay = dispatch_time(DISPATCH_TIME_NOW, Int64(nanoSeconds))
+  dispatch_after(delay, dispatch_get_main_queue()) {
+    animator = nil
+    fromVC.view.alpha = 1.0
+    transitionContext.completeTransition(true)
+  }
+}
+</code></pre><p>最后一定要记得通知系统过渡动画结束了，无论是像代码中利用定时器，亦或者在<em>completionHandler</em>通知，都行。否则整个App会卡住，无法再进行任何操作（嗯，亲测有效）。</p>
+<p>保存代码，构建然后运行App，点开Red看看你实现的效果吧。</p>
+<p>至于View Controller消失时候的过渡，会放在后面跟交互式过渡动画一起。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/iOS 7/">iOS 7</a><a href="/tags/CustomTransition/">CustomTransition</a>
+  </div>
+
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://code4blues.github.io/2014/07/03/0010_学习自定义过渡动画/" data-title="0010_学习自定义过渡动画 | Code4Blues" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2014/06/14/0009_http初窥/"  title="0009_HTTP初窥">
+ <strong>NEXT:</strong><br/> 
+ <span>0009_HTTP初窥
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">1.</span> <span class="toc-text">固定时长的过渡动画</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#transitioningdelegate"><span class="toc-number">1.1.</span> <span class="toc-text">transitioningDelegate</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#animator-"><span class="toc-number">1.2.</span> <span class="toc-text">animator对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">1.3.</span> <span class="toc-text">实践</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/BDD/" title="BDD">BDD<sup>1</sup></a></li>
+		
+			<li><a href="/tags/CocoaPods/" title="CocoaPods">CocoaPods<sup>1</sup></a></li>
+		
+			<li><a href="/tags/CustomTransition/" title="CustomTransition">CustomTransition<sup>1</sup></a></li>
+		
+			<li><a href="/tags/HTTP/" title="HTTP">HTTP<sup>1</sup></a></li>
+		
+			<li><a href="/tags/JavaScript/" title="JavaScript">JavaScript<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Karma/" title="Karma">Karma<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Kiwi/" title="Kiwi">Kiwi<sup>1</sup></a></li>
+		
+			<li><a href="/tags/RequireJS/" title="RequireJS">RequireJS<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Swift/" title="Swift">Swift<sup>1</sup></a></li>
+		
+			<li><a href="/tags/UI/" title="UI">UI<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Xcode/" title="Xcode">Xcode<sup>1</sup></a></li>
+		
+			<li><a href="/tags/iOS/" title="iOS">iOS<sup>8</sup></a></li>
+		
+			<li><a href="/tags/iOS 7/" title="iOS 7">iOS 7<sup>1</sup></a></li>
+		
+			<li><a href="/tags/设计/" title="设计">设计<sup>1</sup></a></li>
+		
+			<li><a href="/tags/读书笔记/" title="读书笔记">读书笔记<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://twitter.com/mrahmiao" target="_blank" title="twitter"></a>
+		
+		
+		<a href="https://github.com/mrahmiao" target="_blank" title="github"></a>
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2014 
+		
+		<a href="http://code4blues.github.io" target="_blank" title="mrahmiao">mrahmiao</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"code4blues"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+  </body>
+</html>
