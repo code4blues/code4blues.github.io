@@ -79,7 +79,7 @@
     </p>
   <p class="article-time">
     <time datetime="2014-07-02T23:01:17.000Z" itemprop="datePublished">7月 3 2014</time>
-    更新日期:<time datetime="2014-07-13T14:59:50.000Z" itemprop="dateModified">7月 13 2014</time>
+    更新日期:<time datetime="2014-07-13T23:18:19.000Z" itemprop="dateModified">7月 14 2014</time>
     
   </p>
 </header>
@@ -107,7 +107,7 @@
 </ol>
 <p>前面两个方法负责返回控制动画运转的animator对象，后面两个方法则是返回控制交互的interactive animator对象。</p>
 <p>如果只是需要自定义过渡动画，那么实现前面2个方法即可。如果还要通过手势去控制过渡动画，那么需要实现全部4个方法。因为动画的实际运转是靠前面两个方法返回的animator对象来控制的，后面两个方法返回得interactive animator对象只控制过渡动画的交互。如果前面两个方法返回得是<em>nil</em>，或者干脆就没有定义，那么过渡动画就是系统默认的了。</p>
-<p>点击<a href="https://github.com/mrahmiao/starter-projects/custom-transitions" target="_blank">这里</a>下载教学工程.</p>
+<p>点击<a href="https://github.com/code4blues/CustomTransitions-Starter/archive/Initial.zip" target="_blank">这里</a>下载教学工程.</p>
 <h1 id="-">固定时长的过渡动画</h1>
 <h2 id="transitioningdelegate">transitioningDelegate</h2>
 <p>对于普通的View Controller之间的过渡，所有的View Controller都自带了一个<strong>transitioningDelegate</strong>属性。对于将要<em>被展示</em>出来（presented）的View Controller（toVC），需要将遵循了<strong>UIViewControllerTransitioningDelegate</strong>协议的delegate对象赋值给它。</p>
@@ -207,6 +207,7 @@ func animateTransition(transitionContext: UIViewControllerContextTransitioning!)
 </code></pre><p>最后一定要记得通知系统过渡动画结束了，无论是像代码中利用定时器，亦或者在<em>completionHandler</em>通知，都行。否则整个App会卡住，无法再进行任何操作（嗯，亲测有效）。</p>
 <p>保存代码，构建然后运行App，点开Red看看你实现的效果吧。</p>
 <p>至于View Controller消失时候的过渡，会放在后面跟交互式过渡动画一起。</p>
+<p>To  Be Continued.</p>
   
 	</div>
 		<footer class="article-footer clearfix">
