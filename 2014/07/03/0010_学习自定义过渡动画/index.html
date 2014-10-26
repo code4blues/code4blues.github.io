@@ -79,7 +79,7 @@
     </p>
   <p class="article-time">
     <time datetime="2014-07-02T23:01:17.000Z" itemprop="datePublished">7月 3 2014</time>
-    更新日期:<time datetime="2014-07-13T23:18:19.000Z" itemprop="dateModified">7月 14 2014</time>
+    更新日期:<time datetime="2014-07-14T22:44:54.000Z" itemprop="dateModified">7月 15 2014</time>
     
   </p>
 </header>
@@ -88,7 +88,7 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">1.</span> <span class="toc-text">固定时长的过渡动画</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#transitioningdelegate"><span class="toc-number">1.1.</span> <span class="toc-text">transitioningDelegate</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#animator-"><span class="toc-number">1.2.</span> <span class="toc-text">animator对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">1.3.</span> <span class="toc-text">实践</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">1.</span> <span class="toc-text">固定时长的过渡动画</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#transitioningdelegate"><span class="toc-number">1.1.</span> <span class="toc-text">transitioningDelegate</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#animator-"><span class="toc-number">1.2.</span> <span class="toc-text">animator对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">1.3.</span> <span class="toc-text">实践</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#uipresentationcontroller"><span class="toc-number">2.</span> <span class="toc-text">UIPresentationController</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#uinavigationcontroller-"><span class="toc-number">3.</span> <span class="toc-text">UINavigationController的过渡动画</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">4.</span> <span class="toc-text">交互式的过渡动画</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">5.</span> <span class="toc-text">简单总结</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">5.1.</span> <span class="toc-text">相关类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">5.2.</span> <span class="toc-text">相关协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">5.3.</span> <span class="toc-text">相关属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">5.4.</span> <span class="toc-text">相关方法</span></a></li></ol>
 		</div>
 		
 		<p>这里的自定义过渡动画指得是View Controller之间的过渡动画。过渡动画大致包括View Controller的显示（presentation）与消失（dismissal），UINavigationController的push与pop，UICollectionViewLayout之间的转换，UITabBarController切换Tab时的过渡（这个一般看不着）等等。后面会把从一个视图切入到另一个视图的过渡叫做<em>入场过渡</em>（presentation/push），然后该视图再切回原视图称为<em>出场过渡</em>（dismissal/pop）。</p>
@@ -207,14 +207,69 @@ func animateTransition(transitionContext: UIViewControllerContextTransitioning!)
 </code></pre><p>最后一定要记得通知系统过渡动画结束了，无论是像代码中利用定时器，亦或者在<em>completionHandler</em>通知，都行。否则整个App会卡住，无法再进行任何操作（嗯，亲测有效）。</p>
 <p>保存代码，构建然后运行App，点开Red看看你实现的效果吧。</p>
 <p>至于View Controller消失时候的过渡，会放在后面跟交互式过渡动画一起。</p>
-<p>To  Be Continued.</p>
+<h1 id="uipresentationcontroller">UIPresentationController</h1>
+<p><strong>UIPresentationController</strong>是iOS 8新增加的API，</p>
+<p>chrome</p>
+<p>presented</p>
+<p>presenting</p>
+<h1 id="uinavigationcontroller-">UINavigationController的过渡动画</h1>
+<p>在使用UINavigationController的push/pop操作时的过渡，会用到另外一个专门的协议，<strong>UINavigationControllerDelegate</strong>。这个协议中有两个方法用于提供自定义过渡动画的需要的animator：</p>
+<ol>
+<li><code>navigationController:animationControllerForOperation:fromViewController:toViewController:</code></li>
+<li><code>navigationController:interactionControllerForAnimationController:</code></li>
+</ol>
+<p>看名称就可以知道，第一个方法提供让动画运转animator，而第二个方法则是提供控制交互的interactive anmiator，我们先把第二个方法放在一边，主要看第一个。</p>
+<p>第一个方法一共四个参数，第一个参数以及最后两个这里就不提了。主要是第二个参数，枚举类型的<strong>UINavigationControllerOperation</strong>，有三个值：</p>
+<ol>
+<li><code>None</code>，<code>UINavigationControllerOperationNone</code></li>
+<li><code>Push</code>，<code>UINavigationControllerOperationPush</code></li>
+<li><code>Pop</code>，<code>UINavigationControllerOperationPop</code></li>
+</ol>
+<p>目前是入场动画，</p>
+<h1 id="-">交互式的过渡动画</h1>
+<h1 id="-">简单总结</h1>
+<h2 id="-">相关类</h2>
+<ul>
+<li>UIPercentDrivenInteractiveTransition</li>
+<li>UICollectionViewTransitioningLayout</li>
+</ul>
+<h2 id="-">相关协议</h2>
+<ul>
+<li>UIViewControllerTransitionCoordinator</li>
+<li>UIViewControllerAnimatedTransitioning</li>
+<li>UIViewControllerInteractiveTransitioning</li>
+<li>UIViewControllerContextTransitioning</li>
+<li>UIViewControllerTransitioningDelegate</li>
+</ul>
+<h2 id="-">相关属性</h2>
+<ul>
+<li>transitionCoordinator: UIViewControllerTransitionCoordinator，所有的view controller都有</li>
+<li>transitioningDelegate: UIViewControllerTransitioningDelegate，所有的view controller都有</li>
+<li>useLayoutToLayoutNavigationTransitions: Bool，UICollectionViewController的一个可写属性</li>
+</ul>
+<h2 id="-">相关方法</h2>
+<ul>
+<li><p>UIPercentDrivenInteractiveTransition</p>
+<pre><code>  + `updateInteractiveTransition:`
+  + `cancelInteractiveTransition`
+  + `finishInteractiveTransition`
+</code></pre></li>
+<li><p>UIViewControllerTransitioningDelegate</p>
+<p>  该协议主要用来提供过渡动画需要的animator对象，animator对象则是遵循了<strong>UIViewControllerAnimatedTransitioning</strong>协议，提供了动画的具体运转方式。</p>
+</li>
+<li><p>UIViewControllerAnimatedTransitioning</p>
+<p>  该协议用来配置过渡动画应该怎么进行，持续时间多长 </p>
+<pre><code>  + `func animateTransition(_ transitionContext: UIViewControllerContextTransitioning!)`
+  + `func transitionDuration(_ transitionContext: UIViewControllerContextTransitioning!) -&gt; NSTimeInterval`
+</code></pre></li>
+</ul>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/iOS 7/">iOS 7</a><a href="/tags/CustomTransition/">CustomTransition</a>
+  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/iOS 7/">iOS 7</a><a href="/tags/iOS 8/">iOS 8</a><a href="/tags/CustomTransition/">CustomTransition</a>
   </div>
 
 
@@ -260,7 +315,7 @@ func animateTransition(transitionContext: UIViewControllerContextTransitioning!)
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">1.</span> <span class="toc-text">固定时长的过渡动画</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#transitioningdelegate"><span class="toc-number">1.1.</span> <span class="toc-text">transitioningDelegate</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#animator-"><span class="toc-number">1.2.</span> <span class="toc-text">animator对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">1.3.</span> <span class="toc-text">实践</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">1.</span> <span class="toc-text">固定时长的过渡动画</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#transitioningdelegate"><span class="toc-number">1.1.</span> <span class="toc-text">transitioningDelegate</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#animator-"><span class="toc-number">1.2.</span> <span class="toc-text">animator对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">1.3.</span> <span class="toc-text">实践</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#uipresentationcontroller"><span class="toc-number">2.</span> <span class="toc-text">UIPresentationController</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#uinavigationcontroller-"><span class="toc-number">3.</span> <span class="toc-text">UINavigationController的过渡动画</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">4.</span> <span class="toc-text">交互式的过渡动画</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">5.</span> <span class="toc-text">简单总结</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">5.1.</span> <span class="toc-text">相关类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">5.2.</span> <span class="toc-text">相关协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">5.3.</span> <span class="toc-text">相关属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">5.4.</span> <span class="toc-text">相关方法</span></a></li></ol>
   </div>
 
 <div id="asidepart">
@@ -280,6 +335,8 @@ func animateTransition(transitionContext: UIViewControllerContextTransitioning!)
 		
 			<li><a href="/tags/CustomTransition/" title="CustomTransition">CustomTransition<sup>1</sup></a></li>
 		
+			<li><a href="/tags/Design/" title="Design">Design<sup>1</sup></a></li>
+		
 			<li><a href="/tags/HTTP/" title="HTTP">HTTP<sup>1</sup></a></li>
 		
 			<li><a href="/tags/JavaScript/" title="JavaScript">JavaScript<sup>1</sup></a></li>
@@ -290,15 +347,21 @@ func animateTransition(transitionContext: UIViewControllerContextTransitioning!)
 		
 			<li><a href="/tags/RequireJS/" title="RequireJS">RequireJS<sup>1</sup></a></li>
 		
+			<li><a href="/tags/Sketch/" title="Sketch">Sketch<sup>1</sup></a></li>
+		
 			<li><a href="/tags/Swift/" title="Swift">Swift<sup>2</sup></a></li>
 		
 			<li><a href="/tags/UI/" title="UI">UI<sup>1</sup></a></li>
 		
 			<li><a href="/tags/Xcode/" title="Xcode">Xcode<sup>1</sup></a></li>
 		
-			<li><a href="/tags/iOS/" title="iOS">iOS<sup>9</sup></a></li>
+			<li><a href="/tags/iOS/" title="iOS">iOS<sup>10</sup></a></li>
 		
 			<li><a href="/tags/iOS 7/" title="iOS 7">iOS 7<sup>1</sup></a></li>
+		
+			<li><a href="/tags/iOS 8/" title="iOS 8">iOS 8<sup>2</sup></a></li>
+		
+			<li><a href="/tags/学习笔记/" title="学习笔记">学习笔记<sup>1</sup></a></li>
 		
 			<li><a href="/tags/设计/" title="设计">设计<sup>1</sup></a></li>
 		
