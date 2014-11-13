@@ -4,25 +4,20 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>0013_设计学习进行时 | Code4Blues</title>
+    <title>0014_GCD_basics_in_Swift | Code4Blues</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="mrahmiao">
     
-    <meta name="description" content="Sketch小技巧
-调整圆角矩形的圆角数量
-Sketch中画出来的圆角矩形（快捷键U）默认是4个圆角，而有时候我们只需要两个圆角，这时候需要对圆角数量作出调整，采用以下步骤：
-
-选中圆角矩形
-在工具栏中选中Edit
-在画布中选择需要去掉的圆角
-在检查器中（界面右边栏）调整Corners的数量为0">
+    <meta name="description" content="这篇文章是Pro Multithreading and Memory Management for iOS and OS X一书有关多线程编程部分的读书笔记整理，该书亦有中文版本，Objective-C高级编程。
+Grand Central Dispatch
+Grand Central Dispat">
     
     
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="mrahmiao" />
-    <meta name="twitter:title" content="0013_设计学习进行时 | Code4Blues" />
+    <meta name="twitter:title" content="0014_GCD_basics_in_Swift | Code4Blues" />
       
     
     
@@ -78,15 +73,15 @@ Sketch中画出来的圆角矩形（快捷键U）默认是4个圆角，而有时
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/09/28/0013_设计学习进行时/" title="0013_设计学习进行时" itemprop="url">0013_设计学习进行时</a>
+      <a href="/2014/11/06/0014_gcd_basics_in_Swift/" title="0014_GCD_basics_in_Swift" itemprop="url">0014_GCD_basics_in_Swift</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://code4blues.github.io" title="mrahmiao">mrahmiao</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-09-27T22:49:03.000Z" itemprop="datePublished">9月 28 2014</time>
-    更新日期:<time datetime="2014-10-26T14:12:16.000Z" itemprop="dateModified">10月 26 2014</time>
+    <time datetime="2014-11-06T14:43:24.000Z" itemprop="datePublished">11月 6 2014</time>
+    更新日期:<time datetime="2014-11-13T22:47:16.000Z" itemprop="dateModified">11月 14 2014</time>
     
   </p>
 </header>
@@ -95,26 +90,39 @@ Sketch中画出来的圆角矩形（快捷键U）默认是4个圆角，而有时
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#sketch-"><span class="toc-number">1.</span> <span class="toc-text">Sketch小技巧</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">1.1.</span> <span class="toc-text">调整圆角矩形的圆角数量</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#grand-central-dispatch"><span class="toc-number">1.</span> <span class="toc-text">Grand Central Dispatch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#dispatch-queue"><span class="toc-number">2.</span> <span class="toc-text">Dispatch Queue</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">3.</span> <span class="toc-text">结语</span></a></li></ol>
 		</div>
 		
-		<h1 id="sketch-">Sketch小技巧</h1>
-<h2 id="-">调整圆角矩形的圆角数量</h2>
-<p>Sketch中画出来的圆角矩形（快捷键<strong>U</strong>）默认是4个圆角，而有时候我们只需要两个圆角，这时候需要对圆角数量作出调整，采用以下步骤：</p>
+		<p>这篇文章是<a href="http://book.douban.com/subject/10536953/" target="_blank">Pro Multithreading and Memory Management for iOS and OS X</a>一书有关多线程编程部分的读书笔记整理，该书亦有中文版本，<a href="http://book.douban.com/subject/24720270/" target="_blank">Objective-C高级编程</a>。</p>
+<h1 id="grand-central-dispatch">Grand Central Dispatch</h1>
+<p>Grand Central Dispatch，不清楚中文名称是啥，一般简称为GCD。这是Apple提供的一个用于iOS和OS X系统的底层多核并发库，简单易懂性能棒棒嗒，GCD大法好。另外一个操作多线程的<strong>NSOperation</strong>类，就是基于GCD的。</p>
+<p>在Xcode或者Dash里面输入<em>dispatch</em>，可以看到一大片的条目，这里会对其中的一些进行解释。</p>
+<h1 id="dispatch-queue">Dispatch Queue</h1>
+<p>Google翻译出来的中文是<em>调度队列</em>，它是用于暂存即将执行的任务的<em>FIFO（先进先出）</em>队列，FIFO这个基础的概念这里就不多说了。</p>
+<p>GCD里面一共有两种类型的调度队列：</p>
 <ol>
-<li>选中圆角矩形</li>
-<li>在工具栏中选中<strong>Edit</strong></li>
-<li>在画布中选择需要去掉的圆角</li>
-<li>在检查器中（界面右边栏）调整<strong>Corners</strong>的数量为0</li>
+<li>Serial Dispatch Queue，串行调度队列</li>
+<li>Concurrent Dispatch Queue，并行调度队列。</li>
 </ol>
-<p><img src="/img/0013/adjust_rounded_corners.png" alt="调整圆角"></p>
+<p>单词<em>concurrent</em>的本意是并发，<em>parallel</em>才是并行，这在多线程编程中是两个概念，这里就先不区分它们了，统一认为是<em>同时发生同时执行</em>。</p>
+<h1 id="-">结语</h1>
+<p>笔记整理就到这里了，想看到更详细的内容，可以自己去借或者买相关的图书查阅，Apple的本身的文档也不错，Raywenderlich上也有几篇很好的教程，大家自己看吧：</p>
+<ul>
+<li><a href="http://www.raywenderlich.com/4295/multithreading-and-grand-central-dispatch-on-ios-for-beginners-tutorial" target="_blank">Multithreading and Grand Central Dispatch on iOS for Beginners Tutorial</a></li>
+<li><a href="http://www.raywenderlich.com/60749/grand-central-dispatch-in-depth-part-1" target="_blank">Grand Central Dispatch In-Depth: Part 1/2</a></li>
+<li><a href="http://www.raywenderlich.com/63338/grand-central-dispatch-in-depth-part-2" target="_blank">Grand Central Dispatch In-Depth: Part 2/2</a></li>
+<li><a href="http://www.raywenderlich.com/19788/how-to-use-nsoperations-and-nsoperationqueues" target="_blank">How To Use NSOperations and NSOperationQueues</a></li>
+<li><a href="https://developer.apple.com/LIBRARY/ios/documentation/Performance/Reference/GCD_libdispatch_Ref/index.html" target="_blank">Grand Central Dispatch (GCD) Reference</a></li>
+<li><a href="https://developer.apple.com/library/ios/documentation/General/Conceptual/ConcurrencyProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008091-CH1-SW1" target="_blank">Concurrency Programming Guide</a></li>
+</ul>
+<hr>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Design/">Design</a><a href="/tags/Sketch/">Sketch</a>
+  <span></span> <a href="/tags/GCD/">GCD</a><a href="/tags/iOS/">iOS</a><a href="/tags/Swift/">Swift</a><a href="/tags/读书笔记/">读书笔记</a><a href="/tags/Reading Notes/">Reading Notes</a><a href="/tags/Notes/">Notes</a>
   </div>
 
 
@@ -122,7 +130,7 @@ Sketch中画出来的圆角矩形（快捷键U）默认是4个圆角，而有时
 
 <div class="article-share" id="share">
 
-  <div data-url="http://code4blues.github.io/2014/09/28/0013_设计学习进行时/" data-title="0013_设计学习进行时 | Code4Blues" data-tsina="null" class="share clearfix">
+  <div data-url="http://code4blues.github.io/2014/11/06/0014_gcd_basics_in_Swift/" data-title="0014_GCD_basics_in_Swift | Code4Blues" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -132,18 +140,18 @@ Sketch中画出来的圆角矩形（快捷键U）默认是4个圆角，而有时
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2014/11/06/0014_gcd_basics_in_Swift/" title="0014_GCD_basics_in_Swift">
+ <a href="/2014/11/14/0015_ios_动画基础/" title="0015_iOS动画基础">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  0014_GCD_basics_in_Swift</span>
+  0015_iOS动画基础</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2014/07/16/0012_uipresentationcontroller学习笔记/"  title="0012_UIPresentationController学习笔记">
+<a href="/2014/09/28/0013_设计学习进行时/"  title="0013_设计学习进行时">
  <strong>NEXT:</strong><br/> 
- <span>0012_UIPresentationController学习笔记
+ <span>0013_设计学习进行时
 </span>
 </a>
 </div>
@@ -160,7 +168,7 @@ Sketch中画出来的圆角矩形（快捷键U）默认是4个圆角，而有时
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#sketch-"><span class="toc-number">1.</span> <span class="toc-text">Sketch小技巧</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">1.1.</span> <span class="toc-text">调整圆角矩形的圆角数量</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#grand-central-dispatch"><span class="toc-number">1.</span> <span class="toc-text">Grand Central Dispatch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#dispatch-queue"><span class="toc-number">2.</span> <span class="toc-text">Dispatch Queue</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">3.</span> <span class="toc-text">结语</span></a></li></ol>
   </div>
 
 <div id="asidepart">

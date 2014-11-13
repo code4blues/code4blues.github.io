@@ -4,25 +4,22 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>0013_设计学习进行时 | Code4Blues</title>
+    <title>0015_iOS动画基础 | Code4Blues</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="mrahmiao">
     
-    <meta name="description" content="Sketch小技巧
-调整圆角矩形的圆角数量
-Sketch中画出来的圆角矩形（快捷键U）默认是4个圆角，而有时候我们只需要两个圆角，这时候需要对圆角数量作出调整，采用以下步骤：
-
-选中圆角矩形
-在工具栏中选中Edit
-在画布中选择需要去掉的圆角
-在检查器中（界面右边栏）调整Corners的数量为0">
+    <meta name="description" content="这篇是Raywenderlich网站视频教程iOS Animation in Swift的笔记整理，内容会随着我的学习进度而增加。
+可动画化的属性
+iOS动画用到的基础API
+弹簧效果
+--">
     
     
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="mrahmiao" />
-    <meta name="twitter:title" content="0013_设计学习进行时 | Code4Blues" />
+    <meta name="twitter:title" content="0015_iOS动画基础 | Code4Blues" />
       
     
     
@@ -78,15 +75,15 @@ Sketch中画出来的圆角矩形（快捷键U）默认是4个圆角，而有时
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/09/28/0013_设计学习进行时/" title="0013_设计学习进行时" itemprop="url">0013_设计学习进行时</a>
+      <a href="/2014/11/14/0015_ios_动画基础/" title="0015_iOS动画基础" itemprop="url">0015_iOS动画基础</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://code4blues.github.io" title="mrahmiao">mrahmiao</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-09-27T22:49:03.000Z" itemprop="datePublished">9月 28 2014</time>
-    更新日期:<time datetime="2014-10-26T14:12:16.000Z" itemprop="dateModified">10月 26 2014</time>
+    <time datetime="2014-11-13T22:46:40.000Z" itemprop="datePublished">11月 14 2014</time>
+    更新日期:<time datetime="2014-11-13T22:52:19.000Z" itemprop="dateModified">11月 14 2014</time>
     
   </p>
 </header>
@@ -95,26 +92,21 @@ Sketch中画出来的圆角矩形（快捷键U）默认是4个圆角，而有时
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#sketch-"><span class="toc-number">1.</span> <span class="toc-text">Sketch小技巧</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">1.1.</span> <span class="toc-text">调整圆角矩形的圆角数量</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">1.</span> <span class="toc-text">可动画化的属性</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ios-api"><span class="toc-number">2.</span> <span class="toc-text">iOS动画用到的基础API</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">3.</span> <span class="toc-text">弹簧效果</span></a></li></ol>
 		</div>
 		
-		<h1 id="sketch-">Sketch小技巧</h1>
-<h2 id="-">调整圆角矩形的圆角数量</h2>
-<p>Sketch中画出来的圆角矩形（快捷键<strong>U</strong>）默认是4个圆角，而有时候我们只需要两个圆角，这时候需要对圆角数量作出调整，采用以下步骤：</p>
-<ol>
-<li>选中圆角矩形</li>
-<li>在工具栏中选中<strong>Edit</strong></li>
-<li>在画布中选择需要去掉的圆角</li>
-<li>在检查器中（界面右边栏）调整<strong>Corners</strong>的数量为0</li>
-</ol>
-<p><img src="/img/0013/adjust_rounded_corners.png" alt="调整圆角"></p>
+		<p>这篇是Raywenderlich网站视频教程<strong><a href="http://www.raywenderlich.com/82832/video-tutorial-ios-animations-introduction" target="_blank">iOS Animation in Swift</a></strong>的笔记整理，内容会随着我的学习进度而增加。</p>
+<h1 id="-">可动画化的属性</h1>
+<h1 id="ios-api">iOS动画用到的基础API</h1>
+<h1 id="-">弹簧效果</h1>
+<p>--</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Design/">Design</a><a href="/tags/Sketch/">Sketch</a>
+  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/Animation/">Animation</a><a href="/tags/动画/">动画</a><a href="/tags/Notes/">Notes</a>
   </div>
 
 
@@ -122,7 +114,7 @@ Sketch中画出来的圆角矩形（快捷键U）默认是4个圆角，而有时
 
 <div class="article-share" id="share">
 
-  <div data-url="http://code4blues.github.io/2014/09/28/0013_设计学习进行时/" data-title="0013_设计学习进行时 | Code4Blues" data-tsina="null" class="share clearfix">
+  <div data-url="http://code4blues.github.io/2014/11/14/0015_ios_动画基础/" data-title="0015_iOS动画基础 | Code4Blues" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -131,19 +123,11 @@ Sketch中画出来的圆角矩形（快捷键U）默认是4个圆角，而有时
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2014/11/06/0014_gcd_basics_in_Swift/" title="0014_GCD_basics_in_Swift">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  0014_GCD_basics_in_Swift</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2014/07/16/0012_uipresentationcontroller学习笔记/"  title="0012_UIPresentationController学习笔记">
+<a href="/2014/11/06/0014_gcd_basics_in_Swift/"  title="0014_GCD_basics_in_Swift">
  <strong>NEXT:</strong><br/> 
- <span>0012_UIPresentationController学习笔记
+ <span>0014_GCD_basics_in_Swift
 </span>
 </a>
 </div>
@@ -160,7 +144,7 @@ Sketch中画出来的圆角矩形（快捷键U）默认是4个圆角，而有时
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#sketch-"><span class="toc-number">1.</span> <span class="toc-text">Sketch小技巧</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">1.1.</span> <span class="toc-text">调整圆角矩形的圆角数量</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">1.</span> <span class="toc-text">可动画化的属性</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ios-api"><span class="toc-number">2.</span> <span class="toc-text">iOS动画用到的基础API</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">3.</span> <span class="toc-text">弹簧效果</span></a></li></ol>
   </div>
 
 <div id="asidepart">
