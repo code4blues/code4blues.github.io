@@ -81,7 +81,7 @@ Grand Central Dispat">
     </p>
   <p class="article-time">
     <time datetime="2014-11-06T14:43:24.000Z" itemprop="datePublished">11月 6 2014</time>
-    更新日期:<time datetime="2014-11-13T22:47:16.000Z" itemprop="dateModified">11月 14 2014</time>
+    更新日期:<time datetime="2014-11-16T10:19:05.000Z" itemprop="dateModified">11月 16 2014</time>
     
   </p>
 </header>
@@ -90,7 +90,7 @@ Grand Central Dispat">
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#grand-central-dispatch"><span class="toc-number">1.</span> <span class="toc-text">Grand Central Dispatch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#dispatch-queue"><span class="toc-number">2.</span> <span class="toc-text">Dispatch Queue</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">3.</span> <span class="toc-text">结语</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#grand-central-dispatch"><span class="toc-number">1.</span> <span class="toc-text">Grand Central Dispatch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#dispatch-queue"><span class="toc-number">2.</span> <span class="toc-text">Dispatch Queue</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">2.1.</span> <span class="toc-text">创建调度队列</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#main-dispatch-queue-global-dispatch-queue"><span class="toc-number">3.</span> <span class="toc-text">Main Dispatch Queue &amp;&amp; Global Dispatch Queue</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#main-dispatch-queue"><span class="toc-number">3.1.</span> <span class="toc-text">Main Dispatch Queue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#global-dispatch-queue"><span class="toc-number">3.2.</span> <span class="toc-text">Global Dispatch Queue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">3.3.</span> <span class="toc-text">应用场景</span></a></li></ol>
 		</div>
 		
 		<p>这篇文章是<a href="http://book.douban.com/subject/10536953/" target="_blank">Pro Multithreading and Memory Management for iOS and OS X</a>一书有关多线程编程部分的读书笔记整理，该书亦有中文版本，<a href="http://book.douban.com/subject/24720270/" target="_blank">Objective-C高级编程</a>。</p>
@@ -105,17 +105,62 @@ Grand Central Dispat">
 <li>Concurrent Dispatch Queue，并行调度队列。</li>
 </ol>
 <p>单词<em>concurrent</em>的本意是并发，<em>parallel</em>才是并行，这在多线程编程中是两个概念，这里就先不区分它们了，统一认为是<em>同时发生同时执行</em>。</p>
-<h1 id="-">结语</h1>
-<p>笔记整理就到这里了，想看到更详细的内容，可以自己去借或者买相关的图书查阅，Apple的本身的文档也不错，Raywenderlich上也有几篇很好的教程，大家自己看吧：</p>
+<p>顾名思义，串行队列中的任务是以串行的方式同步执行的；而并行队列中的任务，则可以同时执行。</p>
+<h2 id="-">创建调度队列</h2>
+<p>GCD提供了一个函数用以创建调度队列：<code>func dispatch_queue_create(label: UnsafePointer&lt;Int8&gt;, attr: dispatch_queue_attr_t!) -&gt; dispatch_queue_t!</code>。</p>
+<p>这个函数有两个参数，第一个参数<em>label</em>是Swift封装好的指针类型，这里可以简单地认为它就是个String类型，它表示了该队列的标识符，建议使用意义明确易理解的倒序<a href="http://en.wikipedia.org/wiki/Fully_qualified_domain_name" target="_blank">FQDN</a>，这样在调试的时候可以快速的将其定位出来。</p>
+<p>第二个参数<em>attr</em>表示所创建的队列的类型，可以选下面两种：</p>
 <ul>
-<li><a href="http://www.raywenderlich.com/4295/multithreading-and-grand-central-dispatch-on-ios-for-beginners-tutorial" target="_blank">Multithreading and Grand Central Dispatch on iOS for Beginners Tutorial</a></li>
-<li><a href="http://www.raywenderlich.com/60749/grand-central-dispatch-in-depth-part-1" target="_blank">Grand Central Dispatch In-Depth: Part 1/2</a></li>
-<li><a href="http://www.raywenderlich.com/63338/grand-central-dispatch-in-depth-part-2" target="_blank">Grand Central Dispatch In-Depth: Part 2/2</a></li>
-<li><a href="http://www.raywenderlich.com/19788/how-to-use-nsoperations-and-nsoperationqueues" target="_blank">How To Use NSOperations and NSOperationQueues</a></li>
-<li><a href="https://developer.apple.com/LIBRARY/ios/documentation/Performance/Reference/GCD_libdispatch_Ref/index.html" target="_blank">Grand Central Dispatch (GCD) Reference</a></li>
-<li><a href="https://developer.apple.com/library/ios/documentation/General/Conceptual/ConcurrencyProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008091-CH1-SW1" target="_blank">Concurrency Programming Guide</a></li>
+<li><code>DISPATCH_QUEUE_SERIAL</code>，表示串行队列。如果第二个参数传入<code>nil</code>（在ObjectiveC中则需要传入<code>NULL</code>）的话，则默认为串行队列</li>
+<li><code>DISPATCH_QUEUE_CONCURRENT</code>，表示并行队列</li>
 </ul>
+<p>在GCD中所有标识符最后以<code>_t</code>结尾的都是某种类型，这里也不例外，函数的返回类型为<code>dispatch_queue_t</code>，表示了返回了一个调度队列。</p>
+<p>所以如果我们要创建一个队列，可以这样：</p>
+<pre><code>// 串行队列
+let serialQueue: dispatch_queue_t = dispatch_queue_create(&quot;com.code4blues.notes.serialQueue&quot;, DISPATCH_QUEUE_SERIAL)
+
+// 并行队列
+let concurrentQueue: dispatch_queue_t = dispatch_queue_create(&quot;com.code4blues.notes.concurrentQueue&quot;, DISPATCH_QUEUE_CONCURRENT)
+</code></pre><p>当然也可以利用Swift的类型推导将类型省略掉，这里就不再重复了。</p>
+<p>对于多个串行队列，它们是可以并行运行的。即我们创建了一个串行队列并给其添加了一个任务，系统会自动为该队列创建一个线程。所以串行队列最好用来进行不会造成数据不一致的操作，比如读取，以免发生多个线程更新同一份数据的悲剧啊。</p>
+<p>要注意随着串行队列的创建，线程的数量是没有受到限制的，从资源占用方面的考虑来说，不要创建太多串行队列。</p>
+<p>值得一提的是，在OS X 10.8 以及 iOS 6以后，GCD中需要用到引用计数的API都由ARC进行管理了，所以书中提到的<code>dispatch_release</code>以及<code>dispatch_retain</code>两个进行MRC操作的函数现在已经被历史的车轮给碾过去了（现在是OS X 10.10, Yosemite 以及 iOS 8的时代）。名字中包含<code>create</code>的相关函数，再也不用调用前面两个函数进行MRC操作了。</p>
+<h1 id="main-dispatch-queue-global-dispatch-queue">Main Dispatch Queue &amp;&amp; Global Dispatch Queue</h1>
+<p>前面介绍了创建调度队列的方法，但其实绝大多数境况下我们都不会自个儿去创建队列，系统已经为我们提供了现成的线程，main dispatch queue（主调度队列）以及global dispatch queue（全局调度队列）。</p>
+<h2 id="main-dispatch-queue">Main Dispatch Queue</h2>
+<p>主调度队列用于在主线程中执行相关任务。因为有且仅有一个主线程，所以可以知道主调度队列是串行队列。我们所有跟UI有关的操作，都需要在主线程中进行，即获取主调度队列来执行相关任务，否则会出现界面更新不及时的情况。</p>
+<p>GCD提供了一个函数来获取主调度队列：</p>
+<pre><code>func dispatch_get_main_queue() -&gt; dispatch_queue_t!
+</code></pre><h2 id="global-dispatch-queue">Global Dispatch Queue</h2>
+<p>除了主调度队列之外系统提供的其它队列都属于全局调度队列，全局调度队列是并行队列，可以随时通过以下函数获取：</p>
+<pre><code>func dispatch_get_global_queue(identifier: Int, flags: UInt) -&gt; dispatch_queue_t!    
+</code></pre><p>这个函数的第二个参数目前属于预留参数，直接传入数字<em>0</em>即可。第一个参数可以是下面几个系统定义的常量之一：</p>
+<ul>
+<li><code>DISPATCH_QUEUE_PRIORITY_HIGH</code></li>
+<li><code>DISPATCH_QUEUE_PRIORITY_DEFAULT</code></li>
+<li><code>DISPATCH_QUEUE_PRIORITY_LOW</code></li>
+<li><code>DISPATCH_QUEUE_PRIORITY_BACKGROUND</code></li>
+</ul>
+<p>从这几个常量的命名可以看出，上面函数的第一个参数表示的是优先级，优先级从上到下依次从高到低。通过这四个常量可以获取到系统定义的四个不同优先级的调度队列。在这四个队列中的任务，只有高优先级的队列中的任务<em>全部</em>执行完之后，才会去执行低优先级队列中的任务。</p>
+<h2 id="-">应用场景</h2>
+<p>接下来的代码可以覆盖不少我们用到GCD的场景，从外部获取到数据，然后更新到UI上。如果直接在主调度队列中加入下载数据的任务，前面提到过主调度队列中的任务是在主线程中执行，而UI相关的操作也都在主线程中。考虑到数据量大的情况，这肯定会导致界面卡死，所以我们需要把下载任务挪到其他线程中进行，最后在主线程中更新UI。</p>
+<p>Playground中如果需要执行GCD需要进行配置，接下来的代码请复制到Xcode普通项目中执行。</p>
+<pre><code>dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+
+  // 在后台处理耗时的任务
+  NSThread.sleepForTimeInterval(5)
+
+  dispatch_async(dispatch_get_main_queue()) {
+
+  // 在主线程中更新UI
+  }
+}
+</code></pre><p>未完待续..</p>
 <hr>
+<ul>
+<li>本文由<a href="https://twitter.com/mrahmiao" target="_blank">@mrahmiao</a>发布于<a href="https://code4blues.github.io" target="_blank">Code4Blues</a></li>
+<li>版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh" target="_blank">Creative Commons BY-NC-ND 3.0</a></li>
+</ul>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -168,7 +213,7 @@ Grand Central Dispat">
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#grand-central-dispatch"><span class="toc-number">1.</span> <span class="toc-text">Grand Central Dispatch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#dispatch-queue"><span class="toc-number">2.</span> <span class="toc-text">Dispatch Queue</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">3.</span> <span class="toc-text">结语</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#grand-central-dispatch"><span class="toc-number">1.</span> <span class="toc-text">Grand Central Dispatch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#dispatch-queue"><span class="toc-number">2.</span> <span class="toc-text">Dispatch Queue</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">2.1.</span> <span class="toc-text">创建调度队列</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#main-dispatch-queue-global-dispatch-queue"><span class="toc-number">3.</span> <span class="toc-text">Main Dispatch Queue &amp;&amp; Global Dispatch Queue</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#main-dispatch-queue"><span class="toc-number">3.1.</span> <span class="toc-text">Main Dispatch Queue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#global-dispatch-queue"><span class="toc-number">3.2.</span> <span class="toc-text">Global Dispatch Queue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">3.3.</span> <span class="toc-text">应用场景</span></a></li></ol>
   </div>
 
 <div id="asidepart">
