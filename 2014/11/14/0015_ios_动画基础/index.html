@@ -11,9 +11,13 @@
     
     <meta name="description" content="这篇是Raywenderlich网站视频教程iOS Animation in Swift的笔记整理，内容会随着我的学习进度而增加。
 可动画化的属性
-iOS动画用到的基础API
-弹簧效果
---">
+在UIKit中，可以通过改变UIView相关类的实例的某些属性而产生动画效果，这些属性有：
+
+frame
+bounds
+center
+alpha
+tra">
     
     
     
@@ -83,7 +87,7 @@ iOS动画用到的基础API
     </p>
   <p class="article-time">
     <time datetime="2014-11-13T22:46:40.000Z" itemprop="datePublished">11月 14 2014</time>
-    更新日期:<time datetime="2014-11-13T22:52:19.000Z" itemprop="dateModified">11月 14 2014</time>
+    更新日期:<time datetime="2014-11-23T13:48:47.000Z" itemprop="dateModified">11月 23 2014</time>
     
   </p>
 </header>
@@ -92,14 +96,38 @@ iOS动画用到的基础API
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">1.</span> <span class="toc-text">可动画化的属性</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ios-api"><span class="toc-number">2.</span> <span class="toc-text">iOS动画用到的基础API</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">3.</span> <span class="toc-text">弹簧效果</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">1.</span> <span class="toc-text">可动画化的属性</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-api"><span class="toc-number">2.</span> <span class="toc-text">基础API</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">3.</span> <span class="toc-text">弹簧效果</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">4.</span> <span class="toc-text">未完待续</span></a></li></ol>
 		</div>
 		
 		<p>这篇是Raywenderlich网站视频教程<strong><a href="http://www.raywenderlich.com/82832/video-tutorial-ios-animations-introduction" target="_blank">iOS Animation in Swift</a></strong>的笔记整理，内容会随着我的学习进度而增加。</p>
 <h1 id="-">可动画化的属性</h1>
-<h1 id="ios-api">iOS动画用到的基础API</h1>
+<p>在UIKit中，可以通过改变UIView相关类的实例的某些属性而产生动画效果，这些属性有：</p>
+<ul>
+<li>frame</li>
+<li>bounds</li>
+<li>center</li>
+<li>alpha</li>
+<li>transform</li>
+<li>contentStretch</li>
+<li>backgroundColor</li>
+</ul>
+<h1 id="-api">基础API</h1>
+<p>动画需要用到的API一般都是UIView的静态方法，有下面这么几个</p>
+<ul>
+<li><code>animateWithDuration:animations:</code></li>
+<li><code>animateWithDuration:animations:completion:</code></li>
+<li><code>animateWithDuration:delay:options:animations:completion:</code></li>
+</ul>
 <h1 id="-">弹簧效果</h1>
+<p>除了使用Effect Motion以实现弹簧效果外（可以参见第10篇文章），还可以使用UIView提供的另外一个动画API来实现：</p>
+<pre><code>animateWithDuration:delay:usingSpringWithDamping:initialSpringVelocity:options:animations:completion:
+</code></pre><p>这个函数中的出现了新的参数，<em>dampingRatio</em>以及<em>velocity</em>。第三个参数<em>dampingRatio</em>的取值在0～1之间，这个单词的意思是阻尼比例，取值越大，弹簧效果消失得越快。第四个参数<em>velocity</em>表示初始速度，值越大，弹簧的弹性就越强。剩下的参数与前面提到的动画API保持一致。</p>
+<h1 id="-">未完待续</h1>
 <p>--</p>
+<ul>
+<li>本文由<a href="https://twitter.com/mrahmiao" target="_blank">@mrahmiao</a>发布于<a href="https://code4blues.github.io" target="_blank">Code4Blues</a></li>
+<li>版权声明：自由转载-非商用-非衍生-保持署名 | <a href="http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh" target="_blank">Creative Commons BY-NC-ND 3.0</a></li>
+</ul>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -144,7 +172,7 @@ iOS动画用到的基础API
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">1.</span> <span class="toc-text">可动画化的属性</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ios-api"><span class="toc-number">2.</span> <span class="toc-text">iOS动画用到的基础API</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">3.</span> <span class="toc-text">弹簧效果</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">1.</span> <span class="toc-text">可动画化的属性</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-api"><span class="toc-number">2.</span> <span class="toc-text">基础API</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">3.</span> <span class="toc-text">弹簧效果</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">4.</span> <span class="toc-text">未完待续</span></a></li></ol>
   </div>
 
 <div id="asidepart">
