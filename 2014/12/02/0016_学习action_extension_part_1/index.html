@@ -1,0 +1,526 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>0016_学习 Action Extension_Part_1 | Code4Blues</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="mrahmiao">
+    
+    <meta name="description" content="学习 Action Extension
+Action Extension是苹果在iOS 8以及Yosemite中新提供的几种App Extension之一，方便用户在Host App的上下文中浏览或者操作数据。有关App Extension基础知识这里就不赘述了，可以参考CocoaChina上的这篇">
+    
+    
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="mrahmiao" />
+    <meta name="twitter:title" content="0016_学习 Action Extension_Part_1 | Code4Blues" />
+      
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="Code4Blues" title="Code4Blues"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Code4Blues">Code4Blues</a></h1>
+				<h2 class="blog-motto">Way back into code</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:code4blues.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/12/02/0016_学习action_extension_part_1/" title="0016_学习 Action Extension_Part_1" itemprop="url">0016_学习 Action Extension_Part_1</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://code4blues.github.io" title="mrahmiao">mrahmiao</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2014-12-02T13:40:41.000Z" itemprop="datePublished">12月 2 2014</time>
+    更新日期:<time datetime="2014-12-02T13:40:40.000Z" itemprop="dateModified">12月 2 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#-action-extension"><span class="toc-number">1.</span> <span class="toc-text">学习 Action Extension</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">2.</span> <span class="toc-text">准备工作</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#-action-extension"><span class="toc-number">2.1.</span> <span class="toc-text">新建Action Extension</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">2.2.</span> <span class="toc-text">配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#app-group"><span class="toc-number">2.3.</span> <span class="toc-text">App Group</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#reversekit"><span class="toc-number">3.</span> <span class="toc-text">ReverseKit</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">3.1.</span> <span class="toc-text">流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-reversekit"><span class="toc-number">3.2.</span> <span class="toc-text">实现ReverseKit</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">4.</span> <span class="toc-text">接下来做点啥</span></a></li></ol>
+		</div>
+		
+		<h1 id="-action-extension">学习 Action Extension</h1>
+<p>Action Extension是苹果在iOS 8以及Yosemite中新提供的几种App Extension之一，方便用户在Host App的上下文中浏览或者操作数据。有关App Extension基础知识这里就不赘述了，可以参考CocoaChina上的这篇文章，<a href="http://www.cocoachina.com/industry/20140627/8960.html" target="_blank">WWDC2014之App Extensions学习笔记</a>，内容还是挺详细的。</p>
+<h1 id="-">准备工作</h1>
+<h2 id="-action-extension">新建Action Extension</h2>
+<p>打开一个你的工程或者新建一个都行，在<strong>Project Navigator</strong>中选中你的工程，然后选择菜单<strong>Editor\Add Target...</strong>，或者点击<strong>TARGETS</strong>列下方的<strong>+</strong>号来添加新的Action Extension：</p>
+<p><img src="/img/0016/03_add_action_extension_1.png" alt="添加Action Extension"></p>
+<p>在弹出的窗口中选择<strong>iOS\Application Extension\Action Extension</strong>，然后点击<strong>Next</strong>：</p>
+<p><img src="/img/0016/04_add_action_extension_2.png" alt="添加Action Extension"></p>
+<p>在接下来的对话框里，<strong>Product Name</strong>里填上<strong>ReverseKit</strong>，<strong>Language</strong>为<strong>Swift</strong>，点开<strong>Action Type</strong>，可以看到有两个选项：</p>
+<ol>
+<li>Presents User Interface</li>
+<li>No User Interface</li>
+</ol>
+<p>这两个有些许不一样，后面会详述。这里我们选择第二个，<strong>No User Interface</strong>。<strong>Project</strong>跟<strong>Embed in Application</strong>选择你自己的项目。然后点击<strong>Finish</strong>，会弹出一个提示框让你激活ReverseKit的scheme，选择<strong>Activate</strong>即可，这样一个Action Extension就新建完了。</p>
+<h2 id="-">配置</h2>
+<p>在<strong>Project Navigator</strong>中点开<strong>ReverseKit</strong>分组，跟普通的iOS target一样，在<strong>Supporting Files</strong>下面可以看到<strong>Info.plist</strong>，这个文件是用来对Extension进行配置的。点开<strong>Info.plist</strong>并依次展开<strong>Information Property List\NSExtension\NSExtensionAttributes\NSExtensionActiveRule</strong>，可以看到下面这些配置项：</p>
+<p><img src="/img/0016/05_info_plist.png" alt="配置项"></p>
+<p>如果没有看到这些，可能是苹果提供的模板有所改变，另外<strong>Presents User Interface</strong>的配置项跟图中的也不一样。不过没关系，这些都是可以自己添加的。具体这些参数有什么用处，请参考苹果的文档：<a href="https://developer.apple.com/library/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/SystemExtensionKeys.html" target="_blank">App Extension Keys</a>。</p>
+<p>这里将<strong>NSTExtensionActivationSupportsWebURLWithMaxCount</strong>设置为1。</p>
+<h2 id="app-group">App Group</h2>
+<p>App Extension与Containing App之间的数据共享需要通过App Group来实现，这个功能需要先在Xcode中登录开发者账号。</p>
+<p>之后进入了Containing App的target中，在<em>Capabilities</em>中打开<em>App Groups</em>开关：</p>
+<p><img src="/img/0016/01_app_groups.png" alt="App Groups"></p>
+<p>打开之后，Xcode会弹出一个对话框让你选择开发组，在下拉框中选择合适的一个然后点击<em>Choose</em>即可。之后添加一个App Group标识符，按照逆序FQDN的方式起名，标识符要唯一，且必须以<em>group</em>开头：</p>
+<p><img src="/img/0016/02_add_app_group.png" alt="添加App Group标识符"></p>
+<p>之后选中<strong>ReverseKit</strong>的target，并如法炮制，这次直接勾选已经添加了的App Group Identifier就行。</p>
+<h1 id="reversekit">ReverseKit</h1>
+<p>在新建ReverseKit的时候我们选得是<em>No User Interface</em>，所以它是不带界面的Action Extension。打开ReverseKit的分组，可以看到下面这几个文件：</p>
+<p><img src="/img/0016/06_reverse_kit.png" alt="ReverseKit"></p>
+<ul>
+<li>ActionRequestHandler.swift</li>
+<li>Action.js</li>
+<li>Supporting Files\info.plist</li>
+</ul>
+<p>唔，Action.js？怎么还会有一个JavaScript的代码文件？这是因为不带界面的Action Extension只可以在苹果的浏览器<strong>Safari</strong>中执行。什么，想在其它应用中执行你的Action Extension？有机会的，先静下心来把这部分看完。</p>
+<h2 id="-">流程</h2>
+<p>Action.js中定义了一个Action类，它有两个实例方法：</p>
+<ul>
+<li><code>run</code>：在Safari中启动Action Extension后系统会调用这个方法，该方法负责返回一个载有有效数据信息的JSON对象给参数<code>arguments</code>的<code>completionFunction</code>方法。方法调用完成之后，系统会调用<strong>ActionRequestHandler.swift</strong>中的<code>beginRequestWithExtensionContext(context:)</code>方法。</li>
+<li><code>finalize</code>：这个方法在<code>beginRequestWithExtensionContext(context:)</code>方法结束后被调用，可以根据传入的参数来进行根Safari页面有关的操作。</li>
+</ul>
+<p>ActionRequestHandler.swift中有三个实例方法：</p>
+<ul>
+<li><code>beginRequestWithExtensionContext(context:)</code></li>
+<li><code>itemLoadCompletedWithPreprocessingResults(javaScriptPreprocessingResults:)</code></li>
+<li><code>doneWithResults(resultsForJavaScriptFinalizeArg:)</code></li>
+</ul>
+<p>其中第一个方法是必需的，来自于协议<code>NSExtensionRequestHandling</code>，另外两个是模版提供的工具方法。前面提到过在Action.js的<code>run</code>方法运行结束后系统会调用<code>beginRequestWithExtensionContext(context:)</code>，并传入一个<code>NSExtensionContext</code>类型的对象，它一般都会带有Extension可以处理的数据信息。</p>
+<p>整个流程如下图：</p>
+<p><img src="/img/0016/07_work_flow.png" alt="无界面Action Extension工作流程"></p>
+<h2 id="-reversekit">实现ReverseKit</h2>
+<p>这次ReverseKit要做的事情就是将页面中选中的文字逆序弹框提示出来，Let&#39;s do it！</p>
+<p>首先打开<strong>Action.js</strong>，将<code>run</code>方法替换为以下内容：</p>
+<pre><code>run: function(arguments) {
+  var selectedText = &quot;&quot;
+
+  // 这里我们获取页面中选中的文本内容
+  if (window.getSelection) {
+    selectedText = window.getSelection().getRangeAt(0).toString()
+  } else {
+    selectedText = document.getSelection().getRangeAt(0).toString()
+  }
+
+
+  arguments.completionFunction({ &quot;selectedText&quot;: selectedText })
+},
+</code></pre><p>该方法里面我们获取了页面中选中了的文本部分，然后通过调用<code>arguments.completionFunction</code>方法将该文本传回了系统，之后数据可以通过ActionRequestHandler.swift文件中<code>beginRequestWithExtensionContext(context:)</code>的<code>context</code>参数来获取。</p>
+<p>接下来打开ActionRequestHandler.swift，替换<code>beginRequestWithExtensionContext(context:)</code>方法为以下内容：</p>
+<pre><code>func beginRequestWithExtensionContext(context: NSExtensionContext) {
+  // Do not call super in an Action extension with no user interface
+  self.extensionContext = context
+
+  // 因为一次只能处理一块选中内容，所以可以认为inputItems跟attachments只有一个
+  let extensionItem = context.inputItems.first as? NSExtensionItem
+
+  if extensionItem == nil {
+    self.doneWithResults(nil)
+    return
+  }
+
+  let itemProvider = extensionItem!.attachments?.first as? NSItemProvider
+
+  if itemProvider == nil {
+    self.doneWithResults(nil)
+    return
+  }
+
+  let propertyListType = String(kUTTypePropertyList)
+  if itemProvider!.hasItemConformingToTypeIdentifier(propertyListType) {
+    itemProvider!.loadItemForTypeIdentifier(propertyListType, options: nil) { item, err in
+      let dictionary = item as [String: AnyObject]
+      NSOperationQueue.mainQueue().addOperationWithBlock {
+
+        // Safari会使用NSExtensionJavaScriptPreprocessingResultsKey这个Key值
+        // 存储run函数传给completionFunction方法的JSON对象
+        var results = dictionary[NSExtensionJavaScriptPreprocessingResultsKey] as [String: AnyObject]
+        self.itemLoadCompletedWithPreprocessingResults(results)
+      }
+    }
+  } else {
+
+    // 没有找到数据
+    self.doneWithResults(nil)
+  }
+}
+</code></pre><p>前面提到过，我们可以通过<code>beginRequestWithExtensionContext(context:)</code>的<code>context</code>参数来获取页面中的数据。<code>NSExtensionContext</code>对象有一个<code>inputItems</code>属性，通过它可以获取一个<code>NSExtensionItem</code>数组；数组中的每一个<code>NSExtensionItem</code>对象又有一个<code>attachments</code>属性可以获取含有多个对象的数组，这些对象的类型为<code>NSItemProvider</code>。之后利用<code>NSItemProvider</code>的<code>loadItemForTypeIdentifier(_, options:, completionHandler:)</code>方法，可以获取到我们所需要的数据了。</p>
+<p>接下来用下面的代码替换ActionRequestHandler.swift中现有的<code>itemLoadCompletedWithPreprocessingResults</code>方法：</p>
+<pre><code>private func itemLoadCompletedWithPreprocessingResults(javaScriptPreprocessingResults: [NSObject: AnyObject]) {
+  let selectedText = javaScriptPreprocessingResults[&quot;selectedText&quot;] as? String
+
+  if selectedText != nil &amp;&amp; selectedText!.isEmpty == false {
+    let text = Array(selectedText!)
+    let reversedText = String(text.reverse())
+    self.doneWithResults([&quot;reversedText&quot;: reversedText])
+  } else {
+    self.doneWithResults(nil)
+  }
+}
+</code></pre><p>方法里面的逻辑很简单，就是获取到已选中的字符串，然后将它反转过来，最后传给<code>doneWithResults</code>方法。</p>
+<p>然后来看看<code>doneWithResults</code>的实现，请将其实现替换为以下内容：</p>
+<pre><code>private func doneWithResults(resultsForJavaScriptFinalizeArg: [NSObject: AnyObject]?) {
+  if let results = resultsForJavaScriptFinalizeArg {
+
+    // 构造结果数据
+    var items = disposedResultItems(results)
+    extensionContext!.completeRequestReturningItems(items, completionHandler: nil)
+  } else {
+
+    // 否则返回错误信息[&quot;error&quot;: &quot;No selected text&quot;]
+    let items = disposedResultItems([&quot;error&quot;: &quot;No selected Text&quot;])
+    extensionContext!.completeRequestReturningItems(items, completionHandler: nil)
+  }
+
+  self.extensionContext = nil
+}
+</code></pre><p>这个方法里面，我们调用<code>disposedResultItems</code>方法来获取能够回传给Action.js的数据。之后请在<code>ActionRequestHandler</code>类的末尾添加<code>disposedResultItems</code>方法的实现：</p>
+<pre><code>private func disposedResultItems(results: [NSObject: AnyObject]) -&gt; [NSExtensionItem] {
+
+  // 构造NSExtensionItem数据作为回传数据
+  let resultsDictionary = [NSExtensionJavaScriptFinalizeArgumentKey: results]
+  let resultsProvider = NSItemProvider(item: resultsDictionary, typeIdentifier: String(kUTTypePropertyList))
+  var resultsItem = NSExtensionItem()
+  resultsItem.attachments = [resultsProvider]
+  return [resultsItem]
+}
+</code></pre><p>这里构造回传数据的步骤跟<code>beginRequestWithExtensionContext(context:)</code>方法中获取传入数据的步骤基本上可以算是相反的，键值<code>NSExtensionJavaScriptFinalizeArgumentKey</code>下保存的数据会传回<strong>Action.js</strong>的<code>finalize</code>方法作为参数。</p>
+<p>最后回到<strong>Aciton.js</strong>中，将<code>finalize</code>方法的实现替换成下面的代码：</p>
+<pre><code>finalize: function(arguments) {
+  var reversedText = &quot;&quot;;
+  var errorRes = &quot;&quot;;
+
+  // 存在错误
+  errorRes = arguments[&quot;error&quot;];
+  if (errorRes) {
+    alert(&quot;Error: &quot; + errorRes);
+    return;
+  }
+
+  // 获取逆序的字符串
+  reversedText = arguments[&quot;reversedText&quot;];
+  alert(&quot;Text reversed: &quot; + reversedText);
+}
+</code></pre><p>这样所有代码就完成了，可以准备运行我们的ReverseKit了，GoGoGo！</p>
+<p>确保当前scheme设置成了<strong>ReverseKit</strong>，<strong>Cmd+R</strong>后在弹出对话框里选择<strong>Safari</strong>，之后<strong>ReverseKit</strong>会安装在Simulator中，然后会启动<strong>Safari</strong>。在Safari里面进入任一页面后选中几个单词，点击<strong>Share</strong>按钮。你会看到一些Action Extension会以黑白图标出现在分享界面的最下排，往右滑，你会看到我们的<strong>ReverseKit</strong>：</p>
+<p><img src="/img/0016/08_start_reverse_kit.png" alt="启动ReverseKit"></p>
+<p>因为我们没有给ReverseKit添加图标，所以现在ReverseKit图标是全白的，不过不影响，点一下吧，看看效果：</p>
+<p><img src="/img/0016/09_reversed_text.png" alt="逆序文本"></p>
+<h1 id="-">接下来做点啥</h1>
+<p>那还用说，尽情发挥你的想象力写几个Action Extension吧！</p>
+<hr>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/iOS 8/">iOS 8</a><a href="/tags/iOS/">iOS</a><a href="/tags/App Extensions/">App Extensions</a><a href="/tags/Swift/">Swift</a>
+  </div>
+
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://code4blues.github.io/2014/12/02/0016_学习action_extension_part_1/" data-title="0016_学习 Action Extension_Part_1 | Code4Blues" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2014/11/14/0015_ios_动画基础/"  title="0015_iOS动画基础">
+ <strong>NEXT:</strong><br/> 
+ <span>0015_iOS动画基础
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#-action-extension"><span class="toc-number">1.</span> <span class="toc-text">学习 Action Extension</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">2.</span> <span class="toc-text">准备工作</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#-action-extension"><span class="toc-number">2.1.</span> <span class="toc-text">新建Action Extension</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">2.2.</span> <span class="toc-text">配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#app-group"><span class="toc-number">2.3.</span> <span class="toc-text">App Group</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#reversekit"><span class="toc-number">3.</span> <span class="toc-text">ReverseKit</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">3.1.</span> <span class="toc-text">流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-reversekit"><span class="toc-number">3.2.</span> <span class="toc-text">实现ReverseKit</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">4.</span> <span class="toc-text">接下来做点啥</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/Animation/" title="Animation">Animation<sup>1</sup></a></li>
+		
+			<li><a href="/tags/App Extensions/" title="App Extensions">App Extensions<sup>1</sup></a></li>
+		
+			<li><a href="/tags/BDD/" title="BDD">BDD<sup>1</sup></a></li>
+		
+			<li><a href="/tags/CocoaPods/" title="CocoaPods">CocoaPods<sup>1</sup></a></li>
+		
+			<li><a href="/tags/CustomTransition/" title="CustomTransition">CustomTransition<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Design/" title="Design">Design<sup>1</sup></a></li>
+		
+			<li><a href="/tags/GCD/" title="GCD">GCD<sup>1</sup></a></li>
+		
+			<li><a href="/tags/HTTP/" title="HTTP">HTTP<sup>1</sup></a></li>
+		
+			<li><a href="/tags/JavaScript/" title="JavaScript">JavaScript<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Karma/" title="Karma">Karma<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Kiwi/" title="Kiwi">Kiwi<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Notes/" title="Notes">Notes<sup>2</sup></a></li>
+		
+			<li><a href="/tags/Reading Notes/" title="Reading Notes">Reading Notes<sup>1</sup></a></li>
+		
+			<li><a href="/tags/RequireJS/" title="RequireJS">RequireJS<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Sketch/" title="Sketch">Sketch<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Swift/" title="Swift">Swift<sup>4</sup></a></li>
+		
+			<li><a href="/tags/UI/" title="UI">UI<sup>1</sup></a></li>
+		
+			<li><a href="/tags/Xcode/" title="Xcode">Xcode<sup>1</sup></a></li>
+		
+			<li><a href="/tags/iOS/" title="iOS">iOS<sup>13</sup></a></li>
+		
+			<li><a href="/tags/iOS 7/" title="iOS 7">iOS 7<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://twitter.com/mrahmiao" target="_blank" title="twitter"></a>
+		
+		
+		<a href="https://github.com/mrahmiao" target="_blank" title="github"></a>
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2014 
+		
+		<a href="http://code4blues.github.io" target="_blank" title="mrahmiao">mrahmiao</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"code4blues"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+  </body>
+</html>

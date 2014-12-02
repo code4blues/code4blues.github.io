@@ -81,7 +81,7 @@ Grand Central Dispat">
     </p>
   <p class="article-time">
     <time datetime="2014-11-06T14:43:24.000Z" itemprop="datePublished">11月 6 2014</time>
-    更新日期:<time datetime="2014-11-23T13:48:37.000Z" itemprop="dateModified">11月 23 2014</time>
+    更新日期:<time datetime="2014-11-23T22:51:58.000Z" itemprop="dateModified">11月 24 2014</time>
     
   </p>
 </header>
@@ -90,7 +90,7 @@ Grand Central Dispat">
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#grand-central-dispatch"><span class="toc-number">1.</span> <span class="toc-text">Grand Central Dispatch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#dispatch-queue"><span class="toc-number">2.</span> <span class="toc-text">Dispatch Queue</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">2.1.</span> <span class="toc-text">创建调度队列</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#main-dispatch-queue-global-dispatch-queue"><span class="toc-number">3.</span> <span class="toc-text">Main Dispatch Queue &amp;&amp; Global Dispatch Queue</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#main-dispatch-queue"><span class="toc-number">3.1.</span> <span class="toc-text">Main Dispatch Queue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#global-dispatch-queue"><span class="toc-number">3.2.</span> <span class="toc-text">Global Dispatch Queue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">3.3.</span> <span class="toc-text">应用场景</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#-gcd-api"><span class="toc-number">4.</span> <span class="toc-text">常用GCD API</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch_async"><span class="toc-number">4.1.</span> <span class="toc-text">dispatch_async</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch_sync"><span class="toc-number">4.2.</span> <span class="toc-text">dispatch_sync</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch_set_target_queue"><span class="toc-number">4.3.</span> <span class="toc-text">dispatch_set_target_queue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch_after"><span class="toc-number">4.4.</span> <span class="toc-text">dispatch_after</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">5.</span> <span class="toc-text">未完待续。。。</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#grand-central-dispatch"><span class="toc-number">1.</span> <span class="toc-text">Grand Central Dispatch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#dispatch-queue"><span class="toc-number">2.</span> <span class="toc-text">Dispatch Queue</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">2.1.</span> <span class="toc-text">创建调度队列</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#main-dispatch-queue-global-dispatch-queue"><span class="toc-number">3.</span> <span class="toc-text">Main Dispatch Queue &amp;&amp; Global Dispatch Queue</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#main-dispatch-queue"><span class="toc-number">3.1.</span> <span class="toc-text">Main Dispatch Queue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#global-dispatch-queue"><span class="toc-number">3.2.</span> <span class="toc-text">Global Dispatch Queue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">3.3.</span> <span class="toc-text">应用场景</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#-gcd-api"><span class="toc-number">4.</span> <span class="toc-text">常用GCD API</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch_async"><span class="toc-number">4.1.</span> <span class="toc-text">dispatch_async</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch_sync"><span class="toc-number">4.2.</span> <span class="toc-text">dispatch_sync</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch_set_target_queue"><span class="toc-number">4.3.</span> <span class="toc-text">dispatch_set_target_queue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch_after"><span class="toc-number">4.4.</span> <span class="toc-text">dispatch_after</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch_once"><span class="toc-number">4.5.</span> <span class="toc-text">dispatch_once</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch-_group_-"><span class="toc-number">4.6.</span> <span class="toc-text">dispatch_group_*</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch_resume-dispatch_suspend"><span class="toc-number">4.7.</span> <span class="toc-text">dispatch_resume &amp;&amp; dispatch_suspend</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch_apply"><span class="toc-number">4.8.</span> <span class="toc-text">dispatch_apply</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch-_barrier_-"><span class="toc-number">4.9.</span> <span class="toc-text">dispatch_barrier_*</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch_semaphore"><span class="toc-number">4.10.</span> <span class="toc-text">dispatch_semaphore</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch-_block_t"><span class="toc-number">4.11.</span> <span class="toc-text">dispatch_block_t</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">5.</span> <span class="toc-text">结语</span></a></li></ol>
 		</div>
 		
 		<p>这篇文章是<a href="http://book.douban.com/subject/10536953/" target="_blank">Pro Multithreading and Memory Management for iOS and OS X</a>一书有关多线程编程部分的读书笔记整理，该书亦有中文版本，<a href="http://book.douban.com/subject/24720270/" target="_blank">Objective-C高级编程</a>。</p>
@@ -191,7 +191,61 @@ dispatch_after(delay, dispatch_get_main_queue()) {
 <p>Creates a dispatch_time_t using an absolute time according to the wall clock.</p>
 </blockquote>
 <p>目前来看用得不多，这里暂时不赘述，等用到了我再补上^_^。</p>
-<h1 id="-">未完待续。。。</h1>
+<h2 id="dispatch_once">dispatch_once</h2>
+<pre><code>func dispatch_once(_ predicate: UnsafePointer&lt;dispatch_once_t&gt;, _ block: dispatch_block_t!)
+</code></pre><p>这个函数用于确保某个任务在应用的生命周期中只执行一次。举个例子，Objective-C中的单例模式就是用<code>dispatch_once</code>来实现的：</p>
+<pre><code>+ (instancetype)sharedManager {
+  static id _sharedInstance = nil;
+  static dispatch_once_t oncePredicate;
+
+  dispatch_once(&amp;oncePredicate, ^{
+    _sharedInstance = [[self alloc] init];
+  });
+
+  return _sharedInstance;
+}
+</code></pre><p>因为Swift暂时还不支持static变量，所以<code>dispatch_once</code>的用法稍微有些不同：</p>
+<pre><code>struct OncePredicate {
+  static var oncePredicate: dispatch_once_t = 0
+}
+
+dispatch_once(&amp;OncePredicate.oncePredicate) {
+
+  // 只执行一次
+  executeOnce()
+}
+</code></pre><p>这样的写法写成单例模式显得略为繁琐，所以Swift中单例模式有另外一种写法：</p>
+<pre><code>private let sharedInstance = Singleton()
+
+class Singleton() {
+  class var singleton: Singleton {
+    return sharedInstance
+  }
+}
+</code></pre><h2 id="dispatch-_group_-">dispatch_group_*</h2>
+<pre><code>func dispatch_group_create() -&gt; dispatch_group_t!
+
+func dispatch_group_async(_ group: dispatch_group_t!, _ queue: dispatch_queue_t!, _ block: dispatch_block_t!)
+
+func dispatch_group_notify(_ group: dispatch_group_t!, _ queue: dispatch_queue_t!, _ block: dispatch_block_t!)
+
+func dispatch_group_wait(_ group: dispatch_group_t!, _ timeout: dispatch_time_t) -&gt; Int
+</code></pre><h2 id="dispatch_resume-dispatch_suspend">dispatch_resume &amp;&amp; dispatch_suspend</h2>
+<h2 id="dispatch_apply">dispatch_apply</h2>
+<h2 id="dispatch-_barrier_-">dispatch_barrier_*</h2>
+<h2 id="dispatch_semaphore">dispatch_semaphore</h2>
+<h2 id="dispatch-_block_t">dispatch_block_t</h2>
+<h1 id="-">结语</h1>
+<p>笔记整理就到这里了，想看到更详细的内容，可以自己去借或者买相关的图书查阅，Apple的本身的文档也不错，Raywenderlich上也有几篇很好的教程，大家自己看吧：</p>
+<ul>
+<li><a href="http://www.raywenderlich.com/4295/multithreading-and-grand-central-dispatch-on-ios-for-beginners-tutorial" target="_blank">Multithreading and Grand Central Dispatch on iOS for Beginners Tutorial</a></li>
+<li><a href="http://www.raywenderlich.com/60749/grand-central-dispatch-in-depth-part-1" target="_blank">Grand Central Dispatch In-Depth: Part 1/2</a></li>
+<li><a href="http://www.raywenderlich.com/63338/grand-central-dispatch-in-depth-part-2" target="_blank">Grand Central Dispatch In-Depth: Part 2/2</a></li>
+<li><a href="http://www.raywenderlich.com/19788/how-to-use-nsoperations-and-nsoperationqueues" target="_blank">How To Use NSOperations and NSOperationQueues</a></li>
+<li><a href="https://developer.apple.com/LIBRARY/ios/documentation/Performance/Reference/GCD_libdispatch_Ref/index.html" target="_blank">Grand Central Dispatch (GCD) Reference</a></li>
+<li><a href="https://developer.apple.com/library/ios/documentation/General/Conceptual/ConcurrencyProgrammingGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008091-CH1-SW1" target="_blank">Concurrency Programming Guide</a></li>
+</ul>
+<p>除了跟iOS/OS X相关的文档，还推荐看看<a href="http://book.douban.com/subject/1888733/" target="_blank">Java Concurrency in Practice</a>这本书，也有中文译本，《<a href="http://book.douban.com/subject/10484692/" target="_blank">Java并发编程实战</a>》，值得一读。</p>
 <hr>
 <ul>
 <li>本文由<a href="https://twitter.com/mrahmiao" target="_blank">@mrahmiao</a>发布于<a href="https://code4blues.github.io" target="_blank">Code4Blues</a></li>
@@ -249,7 +303,7 @@ dispatch_after(delay, dispatch_get_main_queue()) {
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#grand-central-dispatch"><span class="toc-number">1.</span> <span class="toc-text">Grand Central Dispatch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#dispatch-queue"><span class="toc-number">2.</span> <span class="toc-text">Dispatch Queue</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">2.1.</span> <span class="toc-text">创建调度队列</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#main-dispatch-queue-global-dispatch-queue"><span class="toc-number">3.</span> <span class="toc-text">Main Dispatch Queue &amp;&amp; Global Dispatch Queue</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#main-dispatch-queue"><span class="toc-number">3.1.</span> <span class="toc-text">Main Dispatch Queue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#global-dispatch-queue"><span class="toc-number">3.2.</span> <span class="toc-text">Global Dispatch Queue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">3.3.</span> <span class="toc-text">应用场景</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#-gcd-api"><span class="toc-number">4.</span> <span class="toc-text">常用GCD API</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch_async"><span class="toc-number">4.1.</span> <span class="toc-text">dispatch_async</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch_sync"><span class="toc-number">4.2.</span> <span class="toc-text">dispatch_sync</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch_set_target_queue"><span class="toc-number">4.3.</span> <span class="toc-text">dispatch_set_target_queue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch_after"><span class="toc-number">4.4.</span> <span class="toc-text">dispatch_after</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">5.</span> <span class="toc-text">未完待续。。。</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#grand-central-dispatch"><span class="toc-number">1.</span> <span class="toc-text">Grand Central Dispatch</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#dispatch-queue"><span class="toc-number">2.</span> <span class="toc-text">Dispatch Queue</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">2.1.</span> <span class="toc-text">创建调度队列</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#main-dispatch-queue-global-dispatch-queue"><span class="toc-number">3.</span> <span class="toc-text">Main Dispatch Queue &amp;&amp; Global Dispatch Queue</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#main-dispatch-queue"><span class="toc-number">3.1.</span> <span class="toc-text">Main Dispatch Queue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#global-dispatch-queue"><span class="toc-number">3.2.</span> <span class="toc-text">Global Dispatch Queue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">3.3.</span> <span class="toc-text">应用场景</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#-gcd-api"><span class="toc-number">4.</span> <span class="toc-text">常用GCD API</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch_async"><span class="toc-number">4.1.</span> <span class="toc-text">dispatch_async</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch_sync"><span class="toc-number">4.2.</span> <span class="toc-text">dispatch_sync</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch_set_target_queue"><span class="toc-number">4.3.</span> <span class="toc-text">dispatch_set_target_queue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch_after"><span class="toc-number">4.4.</span> <span class="toc-text">dispatch_after</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch_once"><span class="toc-number">4.5.</span> <span class="toc-text">dispatch_once</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch-_group_-"><span class="toc-number">4.6.</span> <span class="toc-text">dispatch_group_*</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch_resume-dispatch_suspend"><span class="toc-number">4.7.</span> <span class="toc-text">dispatch_resume &amp;&amp; dispatch_suspend</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch_apply"><span class="toc-number">4.8.</span> <span class="toc-text">dispatch_apply</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch-_barrier_-"><span class="toc-number">4.9.</span> <span class="toc-text">dispatch_barrier_*</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch_semaphore"><span class="toc-number">4.10.</span> <span class="toc-text">dispatch_semaphore</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dispatch-_block_t"><span class="toc-number">4.11.</span> <span class="toc-text">dispatch_block_t</span></a></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">5.</span> <span class="toc-text">结语</span></a></li></ol>
   </div>
 
 <div id="asidepart">
@@ -264,6 +318,8 @@ dispatch_after(delay, dispatch_get_main_queue()) {
 		<ul class="clearfix">
 		
 			<li><a href="/tags/Animation/" title="Animation">Animation<sup>1</sup></a></li>
+		
+			<li><a href="/tags/App Extensions/" title="App Extensions">App Extensions<sup>1</sup></a></li>
 		
 			<li><a href="/tags/BDD/" title="BDD">BDD<sup>1</sup></a></li>
 		
@@ -291,17 +347,15 @@ dispatch_after(delay, dispatch_get_main_queue()) {
 		
 			<li><a href="/tags/Sketch/" title="Sketch">Sketch<sup>1</sup></a></li>
 		
-			<li><a href="/tags/Swift/" title="Swift">Swift<sup>3</sup></a></li>
+			<li><a href="/tags/Swift/" title="Swift">Swift<sup>4</sup></a></li>
 		
 			<li><a href="/tags/UI/" title="UI">UI<sup>1</sup></a></li>
 		
 			<li><a href="/tags/Xcode/" title="Xcode">Xcode<sup>1</sup></a></li>
 		
-			<li><a href="/tags/iOS/" title="iOS">iOS<sup>12</sup></a></li>
+			<li><a href="/tags/iOS/" title="iOS">iOS<sup>13</sup></a></li>
 		
 			<li><a href="/tags/iOS 7/" title="iOS 7">iOS 7<sup>1</sup></a></li>
-		
-			<li><a href="/tags/iOS 8/" title="iOS 8">iOS 8<sup>2</sup></a></li>
 		
 		</ul>
 </div>
