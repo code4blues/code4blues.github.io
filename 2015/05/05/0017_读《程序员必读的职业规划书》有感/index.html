@@ -4,23 +4,19 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>0008_Swift学习笔记 | Code4Blues</title>
+    <title>0017_读《程序员必读的职业规划书》有感 | Code4Blues</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="mrahmiao">
     
-    <meta name="description" content="Swift学习笔记
-Selector跟@selector
-Swift的Selector跟ObjC的@selector是一样的，返回一个SEL类型。
-不同的是，ObjC的@selector的参数是标识符，而Swift的Selector的参数时字符串。
-首先是ObjC的代码：
-// Objective-">
+    <meta name="description" content="读《程序员必读的职业规划书》有感
+占个位，@Easy 求样书">
     
     
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="mrahmiao" />
-    <meta name="twitter:title" content="0008_Swift学习笔记 | Code4Blues" />
+    <meta name="twitter:title" content="0017_读《程序员必读的职业规划书》有感 | Code4Blues" />
       
     
     
@@ -76,15 +72,15 @@ Swift的Selector跟ObjC的@selector是一样的，返回一个SEL类型。
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/06/08/0008_swift学习笔记/" title="0008_Swift学习笔记" itemprop="url">0008_Swift学习笔记</a>
+      <a href="/2015/05/05/0017_读《程序员必读的职业规划书》有感/" title="0017_读《程序员必读的职业规划书》有感" itemprop="url">0017_读《程序员必读的职业规划书》有感</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://code4blues.github.io" title="mrahmiao">mrahmiao</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-06-08T04:23:14.000Z" itemprop="datePublished">6月 8 2014</time>
-    更新日期:<time datetime="2014-06-29T22:34:21.000Z" itemprop="dateModified">6月 30 2014</time>
+    <time datetime="2015-05-05T12:26:58.000Z" itemprop="datePublished">5月 5 2015</time>
+    更新日期:<time datetime="2015-05-05T12:31:12.000Z" itemprop="dateModified">5月 5 2015</time>
     
   </p>
 </header>
@@ -93,51 +89,18 @@ Swift的Selector跟ObjC的@selector是一样的，返回一个SEL类型。
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#swift-"><span class="toc-number">1.</span> <span class="toc-text">Swift学习笔记</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#selector-selector"><span class="toc-number">1.1.</span> <span class="toc-text">Selector跟@selector</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#quartzcore"><span class="toc-number">1.2.</span> <span class="toc-text">QuartzCore</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">1.</span> <span class="toc-text">读《程序员必读的职业规划书》有感</span></a></li></ol>
 		</div>
 		
-		<h1 id="swift-">Swift学习笔记</h1>
-<h2 id="selector-selector">Selector跟@selector</h2>
-<p>Swift的<em>Selector</em>跟ObjC的<em>@selector</em>是一样的，返回一个<em>SEL</em>类型。</p>
-<p>不同的是，ObjC的<em>@selector</em>的参数是标识符，而Swift的<em>Selector</em>的参数时字符串。</p>
-<p>首先是ObjC的代码：</p>
-<pre><code>// Objective-C
-UITapGestureRecognizer *doubleTapGesture = [UITapGestureRecognizer alloc]
-  initWithTarget:self
-          action:@selector(someMethod:)];
-
-// Definition of someMethod:     
-- (void)someMethod:(UIGestureRecognizer *)gr {
-  // Do something
-}
-</code></pre><p>接下来是Swift的代码：</p>
-<pre><code>// Swift
-let doubleTapGesture = UITapGestureRecognizer(target: self, action:Selector(&quot;someMethod:&quot;))
-
-// Definition of someMethod:
-func someMethod(gr: UIGestureRecognizer) {
-  // Do something
-}
-</code></pre><p>其实在Swift中可以把Selector省略，直接用字符串代替：</p>
-<pre><code> // Swift
- let doubTapGesture = UITapGestureRecognizer(target: self, action: &quot;someMethod&quot;)
-</code></pre><h2 id="quartzcore">QuartzCore</h2>
-<p>在Xcode6-beta2中，通过Swift编写CALayer相关代码的时候，比如说</p>
-<pre><code>func yRotation(angle: Float) -&gt; CATransform3D {
-  ......
-}
-</code></pre><p>这个时候会报错：</p>
-<pre><code>Use of module &#39;CATransform3D&#39; as a type
-</code></pre><p>而在Objc里面是没有这样的错误的。</p>
-<p>碰到这个错误，我们需要做得就是将<em>QuartzCore</em>模块加载进来。在文件的顶部加载它：</p>
-<pre><code>import QuartzCore
-</code></pre>  
+		<h1 id="-">读《程序员必读的职业规划书》有感</h1>
+<p>占个位，@Easy 求样书</p>
+  
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/Swift/">Swift</a>
+  <span></span> <a href="/tags/杂谈/">杂谈</a><a href="/tags/读书/">读书</a>
   </div>
 
 
@@ -145,7 +108,7 @@ func someMethod(gr: UIGestureRecognizer) {
 
 <div class="article-share" id="share">
 
-  <div data-url="http://code4blues.github.io/2014/06/08/0008_swift学习笔记/" data-title="0008_Swift学习笔记 | Code4Blues" data-tsina="null" class="share clearfix">
+  <div data-url="http://code4blues.github.io/2015/05/05/0017_读《程序员必读的职业规划书》有感/" data-title="0017_读《程序员必读的职业规划书》有感 | Code4Blues" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -154,19 +117,11 @@ func someMethod(gr: UIGestureRecognizer) {
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2014/06/14/0009_http初窥/" title="0009_HTTP初窥">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  0009_HTTP初窥</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2014/06/07/0007_点击界面空白处使得键盘消失/"  title="0007_点击界面空白处使得键盘消失">
+<a href="/2014/12/20/0016_学习action_extension_part_1/"  title="0016_学习 Action Extension_Part_1">
  <strong>NEXT:</strong><br/> 
- <span>0007_点击界面空白处使得键盘消失
+ <span>0016_学习 Action Extension_Part_1
 </span>
 </a>
 </div>
@@ -183,7 +138,7 @@ func someMethod(gr: UIGestureRecognizer) {
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#swift-"><span class="toc-number">1.</span> <span class="toc-text">Swift学习笔记</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#selector-selector"><span class="toc-number">1.1.</span> <span class="toc-text">Selector跟@selector</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#quartzcore"><span class="toc-number">1.2.</span> <span class="toc-text">QuartzCore</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#-"><span class="toc-number">1.</span> <span class="toc-text">读《程序员必读的职业规划书》有感</span></a></li></ol>
   </div>
 
 <div id="asidepart">
