@@ -4,23 +4,21 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>0008_Swift学习笔记 | Code4Blues</title>
+    <title>0018\_&lt;Cocoa Programming&gt;学习笔记 | Code4Blues</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="mrahmiao">
     
-    <meta name="description" content="Swift学习笔记
-Selector跟@selector
-Swift的Selector跟ObjC的@selector是一样的，返回一个SEL类型。
-不同的是，ObjC的@selector的参数是标识符，而Swift的Selector的参数时字符串。
-首先是ObjC的代码：
-// Objective-">
+    <meta name="description" content="\学习笔记
+新建窗口
+书中推荐的做法删掉MainMenu.xib中系统模板提供的窗口，然后自己创建一个继承自NSWindowController的MainViewController，同时勾选Also create XIB file for user interface来创建一个XIB文件。
+当然也">
     
     
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="mrahmiao" />
-    <meta name="twitter:title" content="0008_Swift学习笔记 | Code4Blues" />
+    <meta name="twitter:title" content="0018\_&lt;Cocoa Programming&gt;学习笔记 | Code4Blues" />
       
     
     
@@ -76,15 +74,15 @@ Swift的Selector跟ObjC的@selector是一样的，返回一个SEL类型。
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/06/08/0008_swift学习笔记/" title="0008_Swift学习笔记" itemprop="url">0008_Swift学习笔记</a>
+      <a href="/2015/05/09/0018_cocoa-programming学习笔记/" title="0018\_&lt;Cocoa Programming&gt;学习笔记" itemprop="url">0018\_&lt;Cocoa Programming&gt;学习笔记</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://code4blues.github.io" title="mrahmiao">mrahmiao</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-06-08T04:23:14.000Z" itemprop="datePublished">6月 8 2014</time>
-    更新日期:<time datetime="2014-06-29T22:34:21.000Z" itemprop="dateModified">6月 30 2014</time>
+    <time datetime="2015-05-09T09:07:13.000Z" itemprop="datePublished">5月 9 2015</time>
+    更新日期:<time datetime="2015-05-09T14:07:40.000Z" itemprop="dateModified">5月 9 2015</time>
     
   </p>
 </header>
@@ -93,51 +91,48 @@ Swift的Selector跟ObjC的@selector是一样的，返回一个SEL类型。
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#swift-"><span class="toc-number">1.</span> <span class="toc-text">Swift学习笔记</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#selector-selector"><span class="toc-number">1.1.</span> <span class="toc-text">Selector跟@selector</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#quartzcore"><span class="toc-number">1.2.</span> <span class="toc-text">QuartzCore</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#-cocoa-programming-"><span class="toc-number">1.</span> <span class="toc-text">学习笔记</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">1.1.</span> <span class="toc-text">新建窗口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-radio-"><span class="toc-number">1.2.</span> <span class="toc-text">多个Radio按钮</span></a></li></ol>
 		</div>
 		
-		<h1 id="swift-">Swift学习笔记</h1>
-<h2 id="selector-selector">Selector跟@selector</h2>
-<p>Swift的<em>Selector</em>跟ObjC的<em>@selector</em>是一样的，返回一个<em>SEL</em>类型。</p>
-<p>不同的是，ObjC的<em>@selector</em>的参数是标识符，而Swift的<em>Selector</em>的参数时字符串。</p>
-<p>首先是ObjC的代码：</p>
-<pre><code>// Objective-C
-UITapGestureRecognizer *doubleTapGesture = [UITapGestureRecognizer alloc]
-  initWithTarget:self
-          action:@selector(someMethod:)];
+		<h1 id="-cocoa-programming-">\<Cocoa Programming\>学习笔记</h1>
+<h2 id="-">新建窗口</h2>
+<p>书中推荐的做法删掉<code>MainMenu.xib</code>中系统模板提供的窗口，然后自己创建一个继承自<code>NSWindowController</code>的<code>MainViewController</code>，同时勾选<em>Also create XIB file for user interface</em>来创建一个XIB文件。</p>
+<p>当然也可以不够选上面的选项，自己新建一个XIB文件，步骤就比较麻烦了：</p>
+<ol>
+<li>首先新建一个名称跟WindowController一致的空XIB文件（Command + N -> OS X -> User Interface -> Empty），比如说<code>MainWindowController.swift</code>对应得文件名是<code>MainWindowController.xib</code>，不强制这样命名，但是推荐这么做。</li>
+<li>接着从<em>Object Library</em>中拖一个<em>Window</em>到我们创建的XIB文件中。</li>
+<li>打开<em>Window</em>的<em>Attributes Inspector</em>，勾掉<em>Visible At Launch</em></li>
+<li>打开<em>File’s Owner</em>的<em>Identity Inspector</em>，将其<em>Class</em>设置为<em>MainWindowController</em></li>
+<li>最后通过Control-Drag从<em>File’s Owner</em>到<em>Window</em>，在弹出<em>Outlets</em>菜单里选中<code>window</code>，这样XIB文件跟Controller就关联起来了。</li>
+</ol>
+<p>关联完之后的步骤就一致了，打开<code>MainWindowController.swift</code>，覆写<code>windowNibName</code>属性，返回XIB文件名称：</p>
+<pre><code>override var windowNibName: String? {
+  return “MainWindowController”
+}
+</code></pre><p>之后打开<code>AppDelegate</code>，删掉原来的window属性，重新建一个，代码大概如下：</p>
+<pre><code>class AppDelegate {
+  var mainWindowController: MainWindowController?
 
-// Definition of someMethod:     
-- (void)someMethod:(UIGestureRecognizer *)gr {
-  // Do something
+  func applicationDidFinishLaunching(aNotification: NSNotification) {
+    let mainWindowController = MainWindowController()
+    mainWindowController.showWindow(self)
+self.mainWindowController = mainWindowController
+  }
 }
-</code></pre><p>接下来是Swift的代码：</p>
-<pre><code>// Swift
-let doubleTapGesture = UITapGestureRecognizer(target: self, action:Selector(&quot;someMethod:&quot;))
-
-// Definition of someMethod:
-func someMethod(gr: UIGestureRecognizer) {
-  // Do something
-}
-</code></pre><p>其实在Swift中可以把Selector省略，直接用字符串代替：</p>
-<pre><code> // Swift
- let doubTapGesture = UITapGestureRecognizer(target: self, action: &quot;someMethod&quot;)
-</code></pre><h2 id="quartzcore">QuartzCore</h2>
-<p>在Xcode6-beta2中，通过Swift编写CALayer相关代码的时候，比如说</p>
-<pre><code>func yRotation(angle: Float) -&gt; CATransform3D {
-  ......
-}
-</code></pre><p>这个时候会报错：</p>
-<pre><code>Use of module &#39;CATransform3D&#39; as a type
-</code></pre><p>而在Objc里面是没有这样的错误的。</p>
-<p>碰到这个错误，我们需要做得就是将<em>QuartzCore</em>模块加载进来。在文件的顶部加载它：</p>
-<pre><code>import QuartzCore
-</code></pre>  
+</code></pre><h2 id="-radio-">多个Radio按钮</h2>
+<p>Cocoa的Object Library中，有一个<em>Radio Group</em>，拖出来之后可以看到两个Radio按钮。但是不推荐使用，书中是这么说的：</p>
+<blockquote>
+<p>That object is based on NSMatrix, which has been informally deprecated.</p>
+</blockquote>
+<p>在这个Object不能使用的情况下，可以用另外一种方式来实现多个Radio按钮：</p>
+<p>使用多个<em>Style</em>为<strong>Radio</strong>的Push button，将它们的action方法都设置为同一个。然后给这几个按钮设置不同的Tag，在Action方法中使用tag来判断具体的按钮。</p>
+  
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/Swift/">Swift</a>
+  <span></span> <a href="/tags/读书笔记/">读书笔记</a><a href="/tags/Cocoa/">Cocoa</a>
   </div>
 
 
@@ -145,7 +140,7 @@ func someMethod(gr: UIGestureRecognizer) {
 
 <div class="article-share" id="share">
 
-  <div data-url="http://code4blues.github.io/2014/06/08/0008_swift学习笔记/" data-title="0008_Swift学习笔记 | Code4Blues" data-tsina="null" class="share clearfix">
+  <div data-url="http://code4blues.github.io/2015/05/09/0018_cocoa-programming学习笔记/" data-title="0018\_&lt;Cocoa Programming&gt;学习笔记 | Code4Blues" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -154,19 +149,11 @@ func someMethod(gr: UIGestureRecognizer) {
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2014/06/14/0009_http初窥/" title="0009_HTTP初窥">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  0009_HTTP初窥</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2014/06/07/0007_点击界面空白处使得键盘消失/"  title="0007_点击界面空白处使得键盘消失">
+<a href="/2015/05/05/0017_读《程序员必读的职业规划书》有感/"  title="0017_读《程序员必读的职业规划书》有感">
  <strong>NEXT:</strong><br/> 
- <span>0007_点击界面空白处使得键盘消失
+ <span>0017_读《程序员必读的职业规划书》有感
 </span>
 </a>
 </div>
@@ -183,7 +170,7 @@ func someMethod(gr: UIGestureRecognizer) {
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#swift-"><span class="toc-number">1.</span> <span class="toc-text">Swift学习笔记</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#selector-selector"><span class="toc-number">1.1.</span> <span class="toc-text">Selector跟@selector</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#quartzcore"><span class="toc-number">1.2.</span> <span class="toc-text">QuartzCore</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#-cocoa-programming-"><span class="toc-number">1.</span> <span class="toc-text">学习笔记</span></a></li><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#-"><span class="toc-number">1.1.</span> <span class="toc-text">新建窗口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-radio-"><span class="toc-number">1.2.</span> <span class="toc-text">多个Radio按钮</span></a></li></ol>
   </div>
 
 <div id="asidepart">
