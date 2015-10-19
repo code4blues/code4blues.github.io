@@ -4,18 +4,20 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>0002_使用Kiwi进行iOS的BDD开发 | Code4Blues</title>
+    <title>0019_BookmarkzForMac测试用户招募中 | Code4Blues</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="mrahmiao">
     
-    <meta name="description" content="Kiwi是一个iOS的BDD测试框架，这篇文章TDD的iOS开发初步以及Kiwi使用入门里有对它的入门介绍。另外也可以到Kiwi的Github Wiki里进行学习，里面也有官方文档以及相关链接。碰到问题还可以到Kiwi的Google Group里咨询。在这里我会写一些开发过程中个人碰到的问题，以及一">
+    <meta name="description" content="BookmarkzForMac测试用户招募中
+Bookmarkz是一款OS X上的浏览器书签管理软件，目标旨在主流平台上替换掉所有浏览器本身的书签管理器（大言不惭 =.=)，当然现在离这个目标还有很长的一段距离要走。
+在Bookmarkz中，您可以使用集合（最多两层）以及标签的形式来组织管理书签。通">
     
     
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="mrahmiao" />
-    <meta name="twitter:title" content="0002_使用Kiwi进行iOS的BDD开发 | Code4Blues" />
+    <meta name="twitter:title" content="0019_BookmarkzForMac测试用户招募中 | Code4Blues" />
       
     
     
@@ -71,15 +73,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/04/12/0002_使用kiwi进行ios的bdd开发/" title="0002_使用Kiwi进行iOS的BDD开发" itemprop="url">0002_使用Kiwi进行iOS的BDD开发</a>
+      <a href="/2015/10/16/0019_bookmarksformac招募测试用户/" title="0019_BookmarkzForMac测试用户招募中" itemprop="url">0019_BookmarkzForMac测试用户招募中</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://code4blues.github.io" title="mrahmiao">mrahmiao</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-04-12T09:10:29.000Z" itemprop="datePublished">4月 12 2014</time>
-    更新日期:<time datetime="2014-04-13T01:09:02.000Z" itemprop="dateModified">4月 13 2014</time>
+    <time datetime="2015-10-15T23:49:46.000Z" itemprop="datePublished">10月 16 2015</time>
+    更新日期:<time datetime="2015-10-19T05:10:47.000Z" itemprop="dateModified">10月 19 2015</time>
     
   </p>
 </header>
@@ -88,73 +90,38 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#mocks-stubs"><span class="toc-number">1.</span> <span class="toc-text">Mocks &amp;&amp; Stubs</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#stub-withblock-"><span class="toc-number">1.1.</span> <span class="toc-text">stub:withBlock:</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#bookmarkzformac-"><span class="toc-number">1.</span> <span class="toc-text">BookmarkzForMac测试用户招募中</span></a></li></ol>
 		</div>
 		
-		<p>Kiwi是一个iOS的BDD测试框架，这篇文章<a href="http://onevcat.com/2014/02/ios-test-with-kiwi/" target="_blank">TDD的iOS开发初步以及Kiwi使用入门</a>里有对它的入门介绍。另外也可以到Kiwi的<a href="https://github.com/allending/kiwi/wiki" target="_blank">Github Wiki</a>里进行学习，里面也有官方文档以及相关链接。碰到问题还可以到Kiwi的<a href="https://groups.google.com/forum/#!forum/kiwi-bdd" target="_blank">Google Group</a>里咨询。在这里我会写一些开发过程中个人碰到的问题，以及一些文档上没有介绍的东西（至少目前还没看到），持续更新。</p>
-<h2 id="mocks-stubs">Mocks &amp;&amp; Stubs</h2>
-<h3 id="stub-withblock-">stub:withBlock:</h3>
-<p>Kiwi的官方Wiki上并没有对这个方法的描述，是我在Xcode中敲代码的时候弹提示出来才知道有这么个方法。经过在<a href="https://groups.google.com/forum/#!forum/kiwi-bdd" target="_blank">Kiwi Group</a>上发问，并结合自己的代码，大概知道怎么用了。</p>
-<p>在Xcode中可以看到这个方法的全貌：</p>
-<pre><code>-(void) stub:(SEL)aSelector withBlock:^id(NSArray *params)block
-</code></pre><p>当我们使用它stub某个方法时，在该方法每次被调用时，Kiwi都会用<code>block</code>参数替换被stub方法的实现。</p>
-<p>其中被stub方法的参数全部被捕获了，，可以通过<code>params</code>数组来获取，索引从0开始。如果参数是基本类型（primitive types）的值，那么这个值会被包装成一个<code>NSValue</code>。</p>
-<p><code>block</code>的返回值就是被stub方法的返回值。如果stub了一个返回值为<code>void</code>的方法，我们在<code>block</code>的最后返回<code>nil</code>即可。注意这个返回值是必须提供的，不然Xcode会报错。</p>
-<p>一个很著名的Mock库，<a href="http://ocmock.org" target="_blank">OCMock</a>也有类似的方法，<code>andDo</code>，这里就不说了，<a href="http://hackazach.net/code/2014/03/03/effective-testing-with-ocmock/" target="_blank">这篇文章</a>的<strong>Dealing with block arguments</strong>部分有提到，感兴趣的可以自己去看看。</p>
-<p>接下来看看具体的代码，我这里用了<a href="https://github.com/AFNetworking/AFNetworking" target="_blank">AFNetworking</a>来举例。</p>
-<p>假设有一个方法调用了<code>AFHTTPRequestOperationManager</code>的<code>POST:parameters:success:failure:</code>方法，其中success参数跟failure参数是block，分别在POST请求发送成功跟失败时调用。而我们需要验证请求成功以及请求失败的情况下代码是否正确，这时候就可以用到<code>stub:withBlock:</code>了。</p>
-<p>首先是<code>POST:parameters:success:failure:</code>的代码：</p>
-<pre><code>- (void)requestPersonalInfoWithCompleteHandler:(void (^)(NSError *error, id res))complete {
-
-  AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-  [manager POST:@&quot;http://example.com&quot; paramters:@{@&quot;name&quot;: @&quot;Blues&quot;}
-    success:^(AFHTTPRequestOperation *operation, id responseObject) {
-
-      // Something to do with responseObject
-      complete(nil， responseObject);
-    }
-    failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-
-      // Deal with error
-      complete(error, nil);
-    }];
-}
-</code></pre><p>在我们的测试代码中，捕获了<code>success</code> block，然后可以构造一个responseObject传递给它：</p>
-<pre><code>it(@&quot;receives correct response if request succeed&quot;, ^{
-
-  NSDictionary *response = @{@&quot;gender&quot;: @&quot;male&quot;};
-  __block NSDictionary *responseReceived;
-
-  // 进行mock设置
-  AFHTTPRequestOperationManager *mockManager = [AFHTTPRequestOperationManager mock];
-  [AFHTTPRequestOperationManager stub:@selector(manager) andReturn:mockManager];
-  [mockManager stub:@selector(POST:paramters:success:failure:) withBlock:^id(NSArray *params) {
-
-    // 获取success block
-    void (^success)(AFHTTPRequestOperation *, id) = params[2];
-    success(response);
-
-    // 记得前面提过的么，这里必须返回一个值
-    return nil;
-  }];
-
-  // 调用函数
-  [myObject requestPersonalInfoWithCompleteHandler:^(NSError *err, id res) {
-      responseReceived = res;
-  }];
-
-  // 最后进行验证
-  [[expectFutureValue(responseReceived) shouldEventually] equal:response];
-});
-</code></pre><p>敲下<em>Command + U</em>，看下我们的成果（PS：代码是从我的个人项目中剪切下来的，不保证一定能运行= =）。</p>
-<p>至于验证请求失败的情况，过程类似，我这里就不赘述了，大家可以自己试试。</p>
+		<h1 id="bookmarkzformac-">BookmarkzForMac测试用户招募中</h1>
+<p>Bookmarkz是一款OS X上的浏览器书签管理软件，目标旨在主流平台上替换掉所有浏览器本身的书签管理器（大言不惭 =.=)，当然现在离这个目标还有很长的一段距离要走。</p>
+<p>在Bookmarkz中，您可以使用集合（最多两层）以及标签的形式来组织管理书签。通过在搜索栏中输入关键字或者标签名，您也可以快速地定位到需要打开的书签。</p>
+<p>目前的特性有：</p>
+<ol>
+<li>通过至多两层集合来管理您的书签</li>
+<li>通过标签对书签进行整合</li>
+<li>通过Swipe来设置常用书签</li>
+<li>通过关键字迅速定位书签</li>
+<li>支持从<a href="https://github.com/mrahmiao/BookmarkzBrowserExtensions/raw/master/Safari/Bookmarkz.safariextz" target="_blank">Safari</a>以及<a href="https://chrome.google.com/webstore/detail/bookmarkz-a-simple-bookma/dchlbgcdbgdmclmmbjflddfbndgjjkha" target="_blank">Chrome</a>上添加书签</li>
+<li>点击书签可直接在默认浏览器中打开（也可选择其他浏览器）</li>
+<li>通过拖拽来变更书签的所在集合</li>
+</ol>
+<p>兼容性：当前仅支持OS X 10.11（El Capitan）。</p>
+<p>为了Bookmarkz测试版可以在您的Mac上运行，我需要您提供您Mac的UUID，获取方法如下：</p>
+<ol>
+<li>通过Spotlight，或者在Dashboard中打开System Information（该程序位于/Applications/Utilities下）</li>
+<li>选择左列硬件Hardware一栏，之后可以在右侧栏目（Hardware Overview）中看到Hardware UUID，一串格式为<strong>XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX</strong>的文字</li>
+</ol>
+<p>之后请将您的UUID以及昵称通过邮件一起发送给我，等招募完成之后我会将测试App回复给您。</p>
+<p>我的邮箱是<a href="mailto:mrahmiao+bookmarkz@gmail.com">mrahmiao+bookmarkz@gmail.com</a></p>
+<p>请轻拍，多谢^_^。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/iOS/">iOS</a><a href="/tags/Kiwi/">Kiwi</a><a href="/tags/BDD/">BDD</a>
+  <span></span> <a href="/tags/El Capitan/">El Capitan</a><a href="/tags/OSX/">OSX</a><a href="/tags/公告/">公告</a><a href="/tags/Bookmarkz/">Bookmarkz</a>
   </div>
 
 
@@ -162,7 +129,7 @@
 
 <div class="article-share" id="share">
 
-  <div data-url="http://code4blues.github.io/2014/04/12/0002_使用kiwi进行ios的bdd开发/" data-title="0002_使用Kiwi进行iOS的BDD开发 | Code4Blues" data-tsina="null" class="share clearfix">
+  <div data-url="http://code4blues.github.io/2015/10/16/0019_bookmarksformac招募测试用户/" data-title="0019_BookmarkzForMac测试用户招募中 | Code4Blues" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -171,19 +138,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2014/04/25/0003_记一次使用cocoapods后的编译错误/" title="0003_记一次使用CocoaPods后的编译错误">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  0003_记一次使用CocoaPods后的编译错误</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2014/03/08/0001_记一次配置karma跟requirejs的过程/"  title="0001_记一次配置Karma跟RequireJS的过程">
+<a href="/2015/05/09/0018_cocoa-programming学习笔记/"  title="0018_&lt;Cocoa Programming&gt;学习笔记">
  <strong>NEXT:</strong><br/> 
- <span>0001_记一次配置Karma跟RequireJS的过程
+ <span>0018_&lt;Cocoa Programming&gt;学习笔记
 </span>
 </a>
 </div>
@@ -200,7 +159,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#mocks-stubs"><span class="toc-number">1.</span> <span class="toc-text">Mocks &amp;&amp; Stubs</span></a></li><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#stub-withblock-"><span class="toc-number">1.1.</span> <span class="toc-text">stub:withBlock:</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#bookmarkzformac-"><span class="toc-number">1.</span> <span class="toc-text">BookmarkzForMac测试用户招募中</span></a></li></ol>
   </div>
 
 <div id="asidepart">
